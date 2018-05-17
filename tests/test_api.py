@@ -36,8 +36,9 @@ def test_one_successful_1(successful_one_package_1, tracking_number):
         packages = client.track(tracking_number)
 
         assert len(packages) == 1
-        assert packages[0].tracking_number == tracking_number
-        assert packages[0].destination_country == packages[0].origin_country
+        assert packages[tracking_number].tracking_number == tracking_number
+        assert packages[tracking_number].destination_country == packages[
+            tracking_number].origin_country
 
 
 def test_one_successful_2(successful_one_package_2, tracking_number):
@@ -51,8 +52,8 @@ def test_one_successful_2(successful_one_package_2, tracking_number):
         packages = client.track(tracking_number)
 
         assert len(packages) == 1
-        assert packages[0].tracking_number == tracking_number
-        assert packages[0].destination_country == 'Unknown'
+        assert packages[tracking_number].tracking_number == tracking_number
+        assert packages[tracking_number].destination_country == 'Unknown'
 
 
 def test_exception(tracking_number):

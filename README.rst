@@ -42,8 +42,8 @@ Usage
   client = Client()
 
   # Track as many packages as you like:
-  packages = client.track('tracking_number1', 'tracking_number2')
-  # -> [Package(...), Package(...)]
+  packages = client.track('12345ABCDE', '78901FGHIJ')
+  # -> {'12345ABCDE': Package(...), '78901FGHIJ', Package(...)}
 
 Each `Package` object has the following info:
 
