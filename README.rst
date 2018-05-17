@@ -42,7 +42,19 @@ Usage
   client = Client()
 
   # Track as many packages as you like:
-  client.track('tracking_number1', 'tracking_number2')
+  packages = client.track('tracking_number1', 'tracking_number2')
+  # -> [Package(...), Package(...)
+
+Each `Package` object has the following info:
+
+* `destination_country`: the country the package was shipped to
+* `info`: a text description of the latest status
+* `location`: the current location (if known)
+* `origin_country`: the country the package was shipped from
+* `package_type`: the type of package (if known)
+* `status`: the overall package status ("In Transit", "Delivered", etc.)
+* `tracking_info_language`: the language of the tracking info
+* `tracking_number`: the all-important tracking number
 
 Contributing
 ============
