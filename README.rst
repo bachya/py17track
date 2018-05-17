@@ -16,7 +16,7 @@ py17track: A Simple Python API for 17track.net
 .. image:: https://codecov.io/gh/bachya/py17track/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/bachya/py17track
 
-.. image:: https://api.codeclimate.com/v1/badges/71eb642c735e33adcdfc/maintainability
+.. image:: https://api.codeclimate.com/v1/badges/af60d65b69d416136fc9/maintainability
   :target: https://codeclimate.com/github/bachya/py17track
 
 .. image:: https://img.shields.io/badge/SayThanks-!-1EAEDB.svg
@@ -43,18 +43,18 @@ Usage
 
   # Track as many packages as you like:
   packages = client.track('tracking_number1', 'tracking_number2')
-  # -> [Package(...), Package(...)
+  # -> [Package(...), Package(...)]
 
 Each `Package` object has the following info:
 
-* `destination_country`: the country the package was shipped to
-* `info`: a text description of the latest status
-* `location`: the current location (if known)
-* `origin_country`: the country the package was shipped from
-* `package_type`: the type of package (if known)
-* `status`: the overall package status ("In Transit", "Delivered", etc.)
-* `tracking_info_language`: the language of the tracking info
-* `tracking_number`: the all-important tracking number
+* :code:`destination_country`: the country the package was shipped to
+* :code:`info`: a text description of the latest status
+* :code:`location`: the current location (if known)
+* :code:`origin_country`: the country the package was shipped from
+* :code:`package_type`: the type of package (if known)
+* :code:`status`: the overall package status ("In Transit", "Delivered", etc.)
+* :code:`tracking_info_language`: the language of the tracking info
+* :code:`tracking_number`: the all-important tracking number
 
 Contributing
 ============
