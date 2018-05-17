@@ -259,22 +259,32 @@ class Package(object):
     # pylint: disable=attribute-defined-outside-init
     def __attrs_post_init__(self):
         """Do some post-init processing."""
-        self.info = self._package_data['track']['z0'].get('z')
-        self.location = self._package_data['track']['z0'].get('c')
-        self.origin_country = COUNTRY_MAP.get(
-            self._package_data['track'].get('b'), 'Unknown')
-        self.package_type = PACKAGE_TYPE_MAP.get(
-            self._package_data['track'].get('d'), 'Unknown')
-        self.status = PACKAGE_STATUS_MAP.get(
-            self._package_data['track'].get('e'), 'Unknown')
-        self.tracking_info_language = self._package_data['track'].get(
-            'ln1', 'Unknown')
-        self.tracking_number = self._package_data['no']
+        try:
+            self.info = self._package_data['track']['z0'].get('z')
+            self.location = self._package_data['track']['z0'].get('c')
+            self.origin_country = COUNTRY_MAP.get(
+                self._package_data['track'].get('b'), 'Unknown')
+            self.package_type = PACKAGE_TYPE_MAP.get(
+                self._package_data['track'].get('d'), 'Unknown')
+            self.status = PACKAGE_STATUS_MAP.get(
+                self._package_data['track'].get('e'), 'Unknown')
+            self.tracking_info_language = self._package_data['track'].get(
+                'ln1', 'Unknown')
+            self.tracking_number = self._package_data['no']
 
-        if (self._package_data['track'].get('e') != 0
-                and self._package_data['track'].get('c') == 0):
-            self.destination_country = COUNTRY_MAP.get(
-                self._package_data['track'].get('b', 'Unknown'))
-        else:
-            self.destination_country = COUNTRY_MAP.get(
-                self._package_data['track'].get('c'), 'Unknown')
+            if (self._package_data['track'].get('e') != 0
+                    and self._package_data['track'].get('c') == 0):
+                self.destination_country = COUNTRY_MAP.get(
+                    self._package_data['track'].get('b', 'Unknown'))
+            else:
+                self.destination_country = COUNTRY_MAP.get(
+                    self._package_data['track'].get('c'), 'Unknown')
+        except (KeyError, TypeError):
+            self.destination_country = None
+            self.info = None
+            self.location = None
+            self.origin_country = None
+            self.package_type = None
+            self.status = None
+            self.tracking_info_language = None
+            self.tracking_number = None
