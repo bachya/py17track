@@ -1,6 +1,0 @@
-[
-  "tests/test_api.py::test_one_failure",
-  "tests/test_api.py::test_one_successful_1",
-  "tests/test_api.py::test_one_successful_2",
-  "tests/test_api.py::test_exception"
-]
