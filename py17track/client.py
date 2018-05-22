@@ -1,6 +1,7 @@
 """Define an 17track.com client."""
 
 from py17track.api import BaseAPI
+from py17track.exceptions import InvalidTrackingNumberError
 from py17track.package import Package
 
 
@@ -13,7 +14,7 @@ class Client(BaseAPI):  # pylint: disable=too-few-public-methods
         resp = self.post('track', json=data).json()
 
         if not resp.get('dat'):
-            raise ValueError('Invalid data for package')
+            raise InvalidTrackingNumberError('Invalid data')
 
         packages = {}
         for info in resp['dat']:
