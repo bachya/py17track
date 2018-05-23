@@ -239,6 +239,7 @@ PACKAGE_STATUS_MAP = {
     10: 'In Transit',
     20: 'Expired',
     30: 'Ready to be Picked Up',
+    35: 'Undelivered',
     40: 'Delivered',
     50: 'Returned'
 }
