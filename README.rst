@@ -35,15 +35,17 @@ Installation
 Usage
 =====
 
+Tracking individual packages via tracking number is easy!
+
 .. code-block:: python
 
   from py17track import Client
 
   client = Client()
 
-  # Track as many packages as you like:
-  packages = client.track('12345ABCDE', '78901FGHIJ')
-  # -> {'12345ABCDE': Package(...), '78901FGHIJ', Package(...)}
+  # Use as many tracking numbers as you'd like:
+  packages = client.track.find('12345ABCDE', '78901FGHIJ')
+  # >>> {Package(...), Package(...)}
 
 Each `Package` object has the following info:
 
@@ -55,6 +57,20 @@ Each `Package` object has the following info:
 * :code:`status`: the overall package status ("In Transit", "Delivered", etc.)
 * :code:`tracking_info_language`: the language of the tracking info
 * :code:`tracking_number`: the all-important tracking number
+
+If you have a 17track.net account, you can also find packages associated with
+that account:
+
+.. code-block:: python
+
+  from py17track import Client
+
+  client = Client()
+
+  client.profile.authenticate('<EMAIL ADDRESS>', '<PASSWORD>')
+  client.profile.packages()
+  # >>> {Package(...), Package(...)}
+
 
 Contributing
 ============
