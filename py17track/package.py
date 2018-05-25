@@ -255,37 +255,19 @@ PACKAGE_TYPE_MAP = {
 @attr.s  # pylint: disable=too-few-public-methods,too-many-instance-attributes
 class Package(object):
     """Define a package object."""
-    _package_data = attr.ib()
+    tracking_number = attr.ib()
+    destination_country = attr.ib(default=0)
+    info_text = attr.ib(default='')
+    location = attr.ib(default='')
+    origin_country = attr.ib(default=0)
+    package_type = attr.ib(default=0)
+    status = attr.ib(default=0)
+    tracking_info_language = attr.ib(default='Unknown')
 
     # pylint: disable=attribute-defined-outside-init
     def __attrs_post_init__(self):
         """Do some post-init processing."""
-        try:
-            self.info = self._package_data['track']['z0'].get('z')
-            self.location = self._package_data['track']['z0'].get('c')
-            self.origin_country = COUNTRY_MAP.get(
-                self._package_data['track'].get('b'), 'Unknown')
-            self.package_type = PACKAGE_TYPE_MAP.get(
-                self._package_data['track'].get('d'), 'Unknown')
-            self.status = PACKAGE_STATUS_MAP.get(
-                self._package_data['track'].get('e'), 'Unknown')
-            self.tracking_info_language = self._package_data['track'].get(
-                'ln1', 'Unknown')
-            self.tracking_number = self._package_data['no']
-
-            if (self._package_data['track'].get('e') != 0
-                    and self._package_data['track'].get('c') == 0):
-                self.destination_country = COUNTRY_MAP.get(
-                    self._package_data['track'].get('b', 'Unknown'))
-            else:
-                self.destination_country = COUNTRY_MAP.get(
-                    self._package_data['track'].get('c'), 'Unknown')
-        except (KeyError, TypeError):
-            self.destination_country = None
-            self.info = None
-            self.location = None
-            self.origin_country = None
-            self.package_type = None
-            self.status = None
-            self.tracking_info_language = None
-            self.tracking_number = None
+        self.destination_country = COUNTRY_MAP[self.destination_country]
+        self.origin_country = COUNTRY_MAP[self.origin_country]
+        self.package_type = PACKAGE_TYPE_MAP[self.package_type]
+        self.status = PACKAGE_STATUS_MAP[self.status]
