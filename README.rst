@@ -58,6 +58,9 @@ Each `Package` object has the following info:
 * :code:`tracking_info_language`: the language of the tracking info
 * :code:`tracking_number`: the all-important tracking number
 
+Since this is uses an unofficial API, there's no guarantee that 17track.net
+will provide every field for every package, all the time.
+
 If you have a 17track.net account, you can also find packages associated with
 that account:
 
@@ -69,7 +72,7 @@ that account:
 
   client.profile.authenticate('<EMAIL ADDRESS>', '<PASSWORD>')
   client.profile.packages()
-  # >>> {Package(...), Package(...)}
+  # >>> {Package(...), Package(...), Package(...), Package(...)}
 
 
 Contributing
