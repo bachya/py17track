@@ -30,7 +30,7 @@ class AdHocTracker(BaseAPI):  # pylint: disable=too-few-public-methods
             resp_data = info.get('track', {})
 
             if not resp_data:
-                raise InvalidTrackingNumberError()
+                continue
 
             kwargs = {
                 'destination_country': resp_data.get('c'),
