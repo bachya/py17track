@@ -28,6 +28,10 @@ class AdHocTracker(BaseAPI):  # pylint: disable=too-few-public-methods
         packages = []
         for info in json['dat']:
             resp_data = info.get('track', {})
+
+            if not resp_data:
+                raise InvalidTrackingNumberError()
+
             kwargs = {
                 'destination_country': resp_data.get('c'),
                 'info_text': resp_data.get('z0', {}).get('z'),
