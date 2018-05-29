@@ -33,10 +33,10 @@ class ProfileManager(BaseAPI):  # pylint: disable=too-few-public-methods
         self.authenticated = False
         super().__init__(session)
 
-    def authenticate(self, email: str, password: str) -> None:
-        """Authenticate an account."""
+    def login(self, email: str, password: str) -> None:
+        """Login to an account."""
         resp = self.post(
-            'https://user.17track.net/userapi/call',
+            API_USER,
             json={
                 'version': '1.0',
                 'method': 'Signin',
@@ -52,6 +52,11 @@ class ProfileManager(BaseAPI):  # pylint: disable=too-few-public-methods
             raise UnauthenticatedError('Invalid username/password')
 
         self.authenticated = True
+
+    def logout(self) -> None:
+        """Logout from an account."""
+        self.session = Session()
+        self.authenticated = False
 
     @requires_authentication
     def packages(self,

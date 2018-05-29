@@ -4,13 +4,29 @@ import pytest
 
 
 @pytest.fixture(scope='session')
-def failure_one_package():
+def failure_one_package_1():
     """Return a failed response for one package."""
     return {
         "ret": 1,
         "msg": "Ok",
         "g": "89b4aae67c414a968142239d0716e1a0",
         "dat": []
+    }
+
+
+@pytest.fixture(scope='session')
+def failure_one_package_2():
+    """Return a failed response for one package."""
+    return {
+        "ret": 1,
+        "msg": "Ok",
+        "g": "89b4aae67c414a968142239d0716e1a0",
+        "dat": [{
+            "no": "12345ABCDEF",
+            "delay": 0,
+            "yt": None,
+            "track": None
+        }]
     }
 
 

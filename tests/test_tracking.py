@@ -12,15 +12,26 @@ from py17track.track import API_TRACK
 from tests.fixtures.track import *  # noqa
 
 
-def test_track_failure(failure_one_package, tracking_number):
+def test_track_failure_1(failure_one_package_1, tracking_number):
     """Test failure of one tracking number."""
     with requests_mock.Mocker() as mock:
-        mock.post(API_TRACK, text=json.dumps(failure_one_package))
+        mock.post(API_TRACK, text=json.dumps(failure_one_package_1))
 
         with pytest.raises(ValueError) as exc:
             client = Client()
             client.track.find(tracking_number)
             assert 'Invalid data' in str(exc)
+
+
+def test_track_failure_2(failure_one_package_2, tracking_number):
+    """Test failure of one tracking number."""
+    with requests_mock.Mocker() as mock:
+        mock.post(API_TRACK, text=json.dumps(failure_one_package_2))
+
+        client = Client()
+        packages = client.track.find(tracking_number)
+
+        assert not packages
 
 
 def test_track_success(successful_one_package_1, tracking_number):

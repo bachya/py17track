@@ -13,24 +13,38 @@ from py17track.profile import API_BUYER, API_USER
 from tests.fixtures.profile import *  # noqa
 
 
-def test_authentication_failure(authentication_failure, email, password):
+def test_login_failure(authentication_failure, email, password):
     """Test failure in authentication."""
     with requests_mock.Mocker() as mock:
         mock.post(API_USER, text=json.dumps(authentication_failure))
 
         with pytest.raises(UnauthenticatedError) as exc:
             client = Client()
-            client.profile.authenticate(email, password)
+            client.profile.login(email, password)
             assert 'Invalid' in str(exc)
 
 
-def test_authentication_success(authentication_success, email, password):
+def test_login_success(authentication_success, email, password):
     """Test success in authentication."""
     with requests_mock.Mocker() as mock:
-        mock.post(API_USER, text=json.dumps(authentication_success))
+        mock.post(
+            API_USER,
+            text=json.dumps(authentication_success),
+            cookies={'__cfduid': '1234567'})
 
         client = Client()
-        client.profile.authenticate(email, password)
+        client.profile.login(email, password)
+
+        assert True
+
+
+def test_logout_success():
+    """Test success in authentication."""
+    with requests_mock.Mocker() as mock:
+        mock.post(API_USER, status_code=200)
+
+        client = Client()
+        client.profile.logout()
 
         assert True
 
@@ -43,7 +57,7 @@ def test_packages(authentication_success, email, password, packages,
         mock.post(API_BUYER, text=json.dumps(packages))
 
         client = Client()
-        client.profile.authenticate(email, password)
+        client.profile.login(email, password)
         packages = client.profile.packages()
         package = packages[0]
 
@@ -68,7 +82,7 @@ def test_summary(authentication_success, email, password, summary):
         mock.post(API_BUYER, text=json.dumps(summary))
 
         client = Client()
-        client.profile.authenticate(email, password)
+        client.profile.login(email, password)
         summary_resp = client.profile.summary()
 
         assert summary_resp['Not Found'] == 2
