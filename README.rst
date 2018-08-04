@@ -86,6 +86,5 @@ Contributing
 #. Code your new feature or bug fix.
 #. Write a test that covers your new functionality.
 #. Run tests: :code:`make test`
-#. Build new docs: :code:`make docs`
 #. Add yourself to AUTHORS.rst.
 #. Submit a pull request!
