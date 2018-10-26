@@ -1,0 +1,6 @@
+[run]
+source = py17track
+
+omit =
+    py17track/__version__.py
+
