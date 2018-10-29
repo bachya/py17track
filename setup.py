@@ -27,6 +27,7 @@ REQUIRED = [  # type: ignore
     'aiodns',
     'aiohttp',
     'async-timeout',
+    'attrs',
 ]
 
 # The rest you shouldn't have to touch too much :)
