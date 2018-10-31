@@ -1,42 +1,25 @@
-"""Define an 17track.com profile manager."""
+"""Define interaction with a user profile."""
 import json
-from typing import Union
+from typing import Coroutine, Callable, Union
 
-from requests import Session
+from .package import PACKAGE_STATUS_MAP, Package
 
-from py17track.api import BaseAPI
-from py17track.exceptions import UnauthenticatedError
-from py17track.package import PACKAGE_STATUS_MAP, Package
-
-API_BUYER = 'https://buyer.17track.net/orderapi/call'
-API_USER = 'https://user.17track.net/userapi/call'
+API_URL_BUYER = 'https://buyer.17track.net/orderapi/call'
+API_URL_USER = 'https://user.17track.net/userapi/call'
 
 
-def requires_authentication(function):
-    """Define a check for authentication"""
-
-    def decorator(self, *args, **kwargs):
-        """ Decorate! """
-        if not self.authenticated:
-            raise UnauthenticatedError('You need to authenticate first!')
-        else:
-            return function(self, *args, **kwargs)
-
-    return decorator
-
-
-class ProfileManager(BaseAPI):  # pylint: disable=too-few-public-methods
+class Profile:
     """Define a 17track.net profile manager."""
 
-    def __init__(self, session: Session) -> None:
+    def __init__(self, request: Callable[..., Coroutine]) -> None:
         """Initialize."""
-        self.authenticated = False
-        super().__init__(session)
+        self._request = request
 
-    def login(self, email: str, password: str) -> None:
-        """Login to an account."""
-        resp = self.post(
-            API_USER,
+    async def login(self, email: str, password: str) -> bool:
+        """Login to the profile."""
+        login_resp = await self._request(
+            'post',
+            API_URL_USER,
             json={
                 'version': '1.0',
                 'method': 'Signin',
@@ -48,23 +31,18 @@ class ProfileManager(BaseAPI):  # pylint: disable=too-few-public-methods
                 'sourcetype': 0
             })
 
-        if resp.json()['Code'] != 0:
-            raise UnauthenticatedError('Invalid username/password')
+        if login_resp.get('Code') != 0:
+            return False
 
-        self.authenticated = True
+        return True
 
-    def logout(self) -> None:
-        """Logout from an account."""
-        self.session = Session()
-        self.authenticated = False
-
-    @requires_authentication
-    def packages(self,
-                 package_state: Union[int, str] = '',
-                 show_archived: bool = False) -> list:
-        """Get detailed information on packages in an account."""
-        resp = self.post(
-            API_BUYER,
+    async def packages(
+            self, package_state: Union[int, str] = '',
+            show_archived: bool = False) -> list:
+        """Get the list of packages associated with the account."""
+        packages_resp = await self._request(
+            'post',
+            API_URL_BUYER,
             json={
                 'version': '1.0',
                 'method': 'GetTrackInfoList',
@@ -79,8 +57,8 @@ class ProfileManager(BaseAPI):  # pylint: disable=too-few-public-methods
                 'sourcetype': 0
             })
 
-        packages = []  # type: ignore
-        for package in resp.json().get('Json', []):
+        packages = []
+        for package in packages_resp.get('Json', []):
             last_event = package.get('FLastEvent')
             if last_event:
                 event = json.loads(last_event)
@@ -98,11 +76,11 @@ class ProfileManager(BaseAPI):  # pylint: disable=too-few-public-methods
             packages.append(Package(package['FTrackNo'], **kwargs))
         return packages
 
-    @requires_authentication
-    def summary(self, show_archived: bool = False) -> dict:
+    async def summary(self, show_archived: bool = False) -> dict:
         """Get a quick summary of how many packages are in an account."""
-        resp = self.post(
-            API_BUYER,
+        summary_resp = await self._request(
+            'post',
+            API_URL_BUYER,
             json={
                 'version': '1.0',
                 'method': 'GetIndexData',
@@ -113,6 +91,6 @@ class ProfileManager(BaseAPI):  # pylint: disable=too-few-public-methods
             })
 
         results = {}
-        for kind in resp.json().get('Json', {}).get('eitem', []):
+        for kind in summary_resp.get('Json', {}).get('eitem', []):
             results[PACKAGE_STATUS_MAP[kind['e']]] = kind['ec']
         return results

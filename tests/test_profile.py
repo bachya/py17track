@@ -1,94 +1,89 @@
-"""Define a set of client tests."""
-
-# pylint: disable=wildcard-import,redefined-outer-name,unused-wildcard-import
-
+"""Define tests for the client object."""
+# pylint: disable=redefined-outer-name,unused-import
 import json
 
+import aiohttp
 import pytest
-import requests_mock
 
 from py17track import Client
-from py17track.exceptions import UnauthenticatedError
-from py17track.profile import API_BUYER, API_USER
-from tests.fixtures.profile import *  # noqa
+
+from .const import TEST_EMAIL, TEST_PASSWORD
+from .fixtures.profile import *  # noqa
 
 
-def test_login_failure(authentication_failure, email, password):
-    """Test failure in authentication."""
-    with requests_mock.Mocker() as mock:
-        mock.post(API_USER, text=json.dumps(authentication_failure))
+@pytest.mark.asyncio
+async def test_login_failure(
+        aresponses, authentication_failure_json, event_loop):
+    """Test that a failed login returns the correct response."""
+    aresponses.add(
+        'user.17track.net', '/userapi/call', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_failure_json), status=200))
 
-        with pytest.raises(UnauthenticatedError) as exc:
-            client = Client()
-            client.profile.login(email, password)
-            assert 'Invalid' in str(exc)
+    async with aiohttp.ClientSession(loop=event_loop) as websession:
+        client = Client(websession)
+        login_result = await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
 
-
-def test_login_success(authentication_success, email, password):
-    """Test success in authentication."""
-    with requests_mock.Mocker() as mock:
-        mock.post(
-            API_USER,
-            text=json.dumps(authentication_success),
-            cookies={'__cfduid': '1234567'})
-
-        client = Client()
-        client.profile.login(email, password)
-
-        assert True
+        assert login_result is False
 
 
-def test_logout_success():
-    """Test success in authentication."""
-    with requests_mock.Mocker() as mock:
-        mock.post(API_USER, status_code=200)
+@pytest.mark.asyncio
+async def test_login_success(
+        aresponses, authentication_success_json, event_loop):
+    """Test that a successful login returns the correct response."""
+    aresponses.add(
+        'user.17track.net', '/userapi/call', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_success_json), status=200))
 
-        client = Client()
-        client.profile.logout()
+    async with aiohttp.ClientSession(loop=event_loop) as websession:
+        client = Client(websession)
+        login_result = await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
 
-        assert True
-
-
-def test_packages(authentication_success, email, password, packages,
-                  tracking_number):
-    """Test getting detail package info from an account."""
-    with requests_mock.Mocker() as mock:
-        mock.post(API_USER, text=json.dumps(authentication_success))
-        mock.post(API_BUYER, text=json.dumps(packages))
-
-        client = Client()
-        client.profile.login(email, password)
-        packages = client.profile.packages()
-        package = packages[0]
-
-        assert package.tracking_number == tracking_number
+        assert login_result is True
 
 
-def test_summary_unauthenticated(summary):
-    """Test failure in authentication."""
-    with requests_mock.Mocker() as mock:
-        mock.post(API_BUYER, text=json.dumps(summary))
+@pytest.mark.asyncio
+async def test_packages(
+        aresponses, authentication_success_json, event_loop, packages_json):
+    """Test getting packages."""
+    aresponses.add(
+        'user.17track.net', '/userapi/call', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_success_json), status=200))
+    aresponses.add(
+        'buyer.17track.net', '/orderapi/call', 'post',
+        aresponses.Response(text=json.dumps(packages_json), status=200))
 
-        with pytest.raises(UnauthenticatedError) as exc:
-            client = Client()
-            client.profile.summary()
-            assert 'authenticate' in str(exc)
+    async with aiohttp.ClientSession(loop=event_loop) as websession:
+        client = Client(websession)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        packages = await client.profile.packages()
+
+        assert len(packages) == 2
 
 
-def test_summary(authentication_success, email, password, summary):
-    """Test getting a package summary from an account."""
-    with requests_mock.Mocker() as mock:
-        mock.post(API_USER, text=json.dumps(authentication_success))
-        mock.post(API_BUYER, text=json.dumps(summary))
+@pytest.mark.asyncio
+async def test_summary(
+        aresponses, authentication_success_json, event_loop, summary_json):
+    """Test getting package summary."""
+    aresponses.add(
+        'user.17track.net', '/userapi/call', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_success_json), status=200))
+    aresponses.add(
+        'buyer.17track.net', '/orderapi/call', 'post',
+        aresponses.Response(text=json.dumps(summary_json), status=200))
 
-        client = Client()
-        client.profile.login(email, password)
-        summary_resp = client.profile.summary()
+    async with aiohttp.ClientSession(loop=event_loop) as websession:
+        client = Client(websession)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        summary = await client.profile.summary()
 
-        assert summary_resp['Not Found'] == 2
-        assert summary_resp['In Transit'] == 6
-        assert summary_resp['Expired'] == 0
-        assert summary_resp['Ready to be Picked Up'] == 0
-        assert summary_resp['Undelivered'] == 0
-        assert summary_resp['Delivered'] == 0
-        assert summary_resp['Returned'] == 0
+        assert summary['Delivered'] == 0
+        assert summary['Expired'] == 0
+        assert summary['In Transit'] == 6
+        assert summary['Not Found'] == 2
+        assert summary['Ready to be Picked Up'] == 0
+        assert summary['Returned'] == 0
+        assert summary['Undelivered'] == 0

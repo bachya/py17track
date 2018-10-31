@@ -1,5 +1,4 @@
 """Define a simple structure for a package."""
-
 import attr
 
 COUNTRY_MAP = {
@@ -252,9 +251,10 @@ PACKAGE_TYPE_MAP = {
 }
 
 
-@attr.s  # pylint: disable=too-few-public-methods,too-many-instance-attributes
-class Package(object):
+@attr.s  # pylint: disable=too-few-public-methods
+class Package:
     """Define a package object."""
+
     tracking_number = attr.ib()
     destination_country = attr.ib(default=0)
     info_text = attr.ib(default='')
