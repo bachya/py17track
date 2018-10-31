@@ -86,14 +86,14 @@ asyncio.get_event_loop().run_until_complete(main())
 
 Each `Package` object has the following info:
 
-* :code:`destination_country`: the country the package was shipped to
-* :code:`info`: a text description of the latest status
-* :code:`location`: the current location (if known)
-* :code:`origin_country`: the country the package was shipped from
-* :code:`package_type`: the type of package (if known)
-* :code:`status`: the overall package status ("In Transit", "Delivered", etc.)
-* :code:`tracking_info_language`: the language of the tracking info
-* :code:`tracking_number`: the all-important tracking number
+* `destination_country`: the country the package was shipped to
+* `info`: a text description of the latest status
+* `location`: the current location (if known)
+* `origin_country`: the country the package was shipped from
+* `package_type`: the type of package (if known)
+* `status`: the overall package status ("In Transit", "Delivered", etc.)
+* `tracking_info_language`: the language of the tracking info
+* `tracking_number`: the all-important tracking number
 
 # Contributing
 
