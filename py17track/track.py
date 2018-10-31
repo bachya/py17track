@@ -1,45 +1,44 @@
-"""Define an 17track.com profile manager."""
-from requests import Session
+"""Define interaction with an individual package."""
+from typing import Callable, Coroutine
 
-from py17track.api import BaseAPI
-from py17track.exceptions import InvalidTrackingNumberError
-from py17track.package import Package
+from .errors import InvalidTrackingNumberError
+from .package import Package
 
-API_TRACK = 'https://t.17track.net/restapi/track'
+API_URL_TRACK = 'https://t.17track.net/restapi/track'
 
 
-class AdHocTracker(BaseAPI):  # pylint: disable=too-few-public-methods
-    """Define a 17track.net profile manager."""
+class Track:  # pylint: disable=too-few-public-methods
+    """Define a 17track.net package manager."""
 
-    def __init__(self, session: Session) -> None:
+    def __init__(self, request: Callable[..., Coroutine]) -> None:
         """Initialize."""
-        self.authenticated = False
-        super().__init__(session)
+        self._request = request
 
-    def find(self, *tracking_numbers: str) -> list:
+    async def find(self, *tracking_numbers: str) -> list:
         """Get tracking info for one or more tracking numbers."""
         data = {'data': [{'num': num} for num in tracking_numbers]}
-        resp = self.post(API_TRACK, json=data)
-        json = resp.json()
+        tracking_resp = await self._request('post', API_URL_TRACK, json=data)
 
-        if not json.get('dat'):
+        print(tracking_resp)
+
+        if not tracking_resp.get('dat'):
             raise InvalidTrackingNumberError('Invalid data')
 
         packages = []
-        for info in json['dat']:
-            resp_data = info.get('track', {})
+        for info in tracking_resp['dat']:
+            package_info = info.get('track', {})
 
-            if not resp_data:
+            if not package_info:
                 continue
 
             kwargs = {
-                'destination_country': resp_data.get('c'),
-                'info_text': resp_data.get('z0', {}).get('z'),
-                'location': resp_data.get('z0', {}).get('c'),
-                'origin_country': resp_data.get('b'),
-                'package_type': resp_data.get('d', 0),
-                'status': resp_data.get('e', 0),
-                'tracking_info_language': resp_data.get('ln1', 'Unknown')
+                'destination_country': package_info.get('c'),
+                'info_text': package_info.get('z0', {}).get('z'),
+                'location': package_info.get('z0', {}).get('c'),
+                'origin_country': package_info.get('b'),
+                'package_type': package_info.get('d', 0),
+                'status': package_info.get('e', 0),
+                'tracking_info_language': package_info.get('ln1', 'Unknown')
             }
             packages.append(Package(info['no'], **kwargs))
         return packages

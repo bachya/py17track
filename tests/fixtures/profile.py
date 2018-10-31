@@ -1,16 +1,15 @@
-"""Define generic fixtures to use anywhere."""
-
+"""Define profile-specific fixtures."""
 import pytest
 
 
-@pytest.fixture(scope='session')
-def authentication_failure():
+@pytest.fixture()
+def authentication_failure_json():
     """Return a failed authentication response."""
     return {"Code": -6, "Message": "You haven't logged in for a long time."}
 
 
-@pytest.fixture(scope='session')
-def authentication_success():
+@pytest.fixture()
+def authentication_success_json():
     """Return a failed authentication response."""
     return {
         "Json": {
@@ -26,14 +25,8 @@ def authentication_success():
     }
 
 
-@pytest.fixture(scope='session')
-def email():
-    """Return a dummy email."""
-    return 'person@company.com'
-
-
-@pytest.fixture(scope='session')
-def packages():
+@pytest.fixture()
+def packages_json():
     """Return package info from an account."""
     return {
         "pageInfo": {
@@ -69,14 +62,8 @@ def packages():
     }
 
 
-@pytest.fixture(scope='session')
-def password():
-    """Return a dummy password."""
-    return '12345'
-
-
-@pytest.fixture(scope='session')
-def summary():
+@pytest.fixture()
+def summary_json():
     """Return a summary of packages in a profile."""
     return {
         "Json": {
@@ -111,9 +98,3 @@ def summary():
         },
         "Code": 0
     }
-
-
-@pytest.fixture(scope='session')
-def tracking_number():
-    """Return a dummy tracking number."""
-    return '1234567890987654321'
