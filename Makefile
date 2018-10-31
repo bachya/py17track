@@ -11,7 +11,7 @@ lint:
 publish:
 	pipenv run python setup.py sdist bdist_wheel
 	pipenv run twine upload dist/*
-	rm -rf dist/ build/ .egg simplisafe_python.egg-info/
+	rm -rf dist/ build/ .egg py17track.egg-info/
 test:
 	pipenv run py.test
 typing:

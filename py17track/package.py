@@ -254,6 +254,7 @@ PACKAGE_TYPE_MAP = {
 @attr.s  # pylint: disable=too-few-public-methods
 class Package:
     """Define a package object."""
+
     tracking_number = attr.ib()
     destination_country = attr.ib(default=0)
     info_text = attr.ib(default='')

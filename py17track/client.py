@@ -4,7 +4,7 @@ from aiohttp.client_exceptions import ClientError
 
 from .errors import RequestError
 from .profile import Profile
-from .track import Track
+# from .track import Track
 
 
 class Client:  # pylint: disable=too-few-public-methods
