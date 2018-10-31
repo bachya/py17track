@@ -14,6 +14,7 @@ class Profile:
     def __init__(self, request: Callable[..., Coroutine]) -> None:
         """Initialize."""
         self._request = request
+        self.account_id = None
 
     async def login(self, email: str, password: str) -> bool:
         """Login to the profile."""
@@ -33,6 +34,8 @@ class Profile:
 
         if login_resp.get('Code') != 0:
             return False
+
+        self.account_id = login_resp['Json']['gid']
 
         return True
 

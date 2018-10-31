@@ -12,10 +12,11 @@ async def main() -> None:
     async with ClientSession() as websession:
         try:
             client = Client(websession)
-            # await client.profile.login('<EMAIL>', '<PASSWORD>')
-            await client.profile.login(
-                'tielemans.jorim@gmail.com', '1arwdrKJx@rF#3Qq')
+            await client.profile.login('<EMAIL>', '<PASSWORD>')
 
+            print('Account ID: {0}'.format(client.profile.account_id))
+
+            print()
             print('Getting account summary...')
             summary = await client.profile.summary()
             print(summary)

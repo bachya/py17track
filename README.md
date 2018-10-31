@@ -72,6 +72,10 @@ async def main() -> None:
       # Login to 17track.net:
       await client.profile.login('<EMAIL>', '<PASSWORD>')
 
+      # Get the account ID:
+      client.profile.account_id
+      # >>> 1234567890987654321
+
       # Get a summary of the user's packages:
       summary = await client.profile.summary()
       # >>> {'In Transit': 3, 'Expired': 3, ... }
