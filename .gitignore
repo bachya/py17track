@@ -1,11 +1,6 @@
-*.egg-info
-*.pyc
-.cache
 .coverage
-.ta
-.tox
-__pycache__
-build
-dist
 .mypy_cache
-.pytest_cache
+.tox/
+Pipfile.lock
+coverage.xml
+py17track.egg-info
