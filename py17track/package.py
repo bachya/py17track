@@ -251,7 +251,7 @@ PACKAGE_TYPE_MAP = {
 }
 
 
-@attr.s  # pylint: disable=too-few-public-methods
+@attr.s(cmp=False)  # pylint: disable=too-few-public-methods
 class Package:
     """Define a package object."""
 
