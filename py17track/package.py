@@ -257,7 +257,8 @@ class Package:
 
     tracking_number = attr.ib()
     destination_country = attr.ib(default=0)
-    info_text = attr.ib(default='')
+    friendly_name = attr.ib(default=None)
+    info_text = attr.ib(default=None)
     location = attr.ib(default='')
     origin_country = attr.ib(default=0)
     package_type = attr.ib(default=0)

@@ -70,10 +70,11 @@ class Profile:
 
             kwargs = {
                 'destination_country': package.get('FSecondCountry', 0),
+                'friendly_name': package.get('FRemark'),
                 'info_text': event.get('z'),
                 'location': event.get('c'),
                 'origin_country': package.get('FFirstCountry', 0),
-                'package_type': event.get('d') or 0,
+                'package_type': package.get('FTrackStateType', 0),
                 'status': package.get('FPackageState', 0)
             }
             packages.append(Package(package['FTrackNo'], **kwargs))
