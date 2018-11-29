@@ -91,6 +91,7 @@ asyncio.get_event_loop().run_until_complete(main())
 Each `Package` object has the following info:
 
 * `destination_country`: the country the package was shipped to
+* `friendly_name`: the human-friendly name of the package
 * `info`: a text description of the latest status
 * `location`: the current location (if known)
 * `origin_country`: the country the package was shipped from
