@@ -251,7 +251,7 @@ PACKAGE_TYPE_MAP = {
 }
 
 
-@attr.s(cmp=False)  # pylint: disable=too-few-public-methods
+@attr.s(frozen=True)  # pylint: disable=too-few-public-methods
 class Package:
     """Define a package object."""
 
@@ -268,7 +268,11 @@ class Package:
     # pylint: disable=attribute-defined-outside-init
     def __attrs_post_init__(self):
         """Do some post-init processing."""
-        self.destination_country = COUNTRY_MAP[self.destination_country]
-        self.origin_country = COUNTRY_MAP[self.origin_country]
-        self.package_type = PACKAGE_TYPE_MAP[self.package_type]
-        self.status = PACKAGE_STATUS_MAP[self.status]
+        object.__setattr__(
+            self, 'destination_country', COUNTRY_MAP[self.destination_country])
+        object.__setattr__(
+            self, 'origin_country', COUNTRY_MAP[self.origin_country])
+        object.__setattr__(
+            self, 'package_type', PACKAGE_TYPE_MAP[self.package_type])
+        object.__setattr__(
+            self, 'status', PACKAGE_STATUS_MAP[self.status])
