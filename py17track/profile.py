@@ -1,8 +1,11 @@
 """Define interaction with a user profile."""
 import json
+import logging
 from typing import Coroutine, Callable, Union
 
 from .package import PACKAGE_STATUS_MAP, Package
+
+_LOGGER = logging.getLogger(__name__)
 
 API_URL_BUYER = 'https://buyer.17track.net/orderapi/call'
 API_URL_USER = 'https://user.17track.net/userapi/call'
@@ -32,6 +35,8 @@ class Profile:
                 'sourcetype': 0
             })
 
+        _LOGGER.debug('Login response: %s', login_resp)
+
         if login_resp.get('Code') != 0:
             return False
 
@@ -59,6 +64,8 @@ class Profile:
                 },
                 'sourcetype': 0
             })
+
+        _LOGGER.debug('Packages response: %s', packages_resp)
 
         packages = []
         for package in packages_resp.get('Json', []):
@@ -93,6 +100,8 @@ class Profile:
                 },
                 'sourcetype': 0
             })
+
+        _LOGGER.debug('Summary response: %s', summary_resp)
 
         results = {}
         for kind in summary_resp.get('Json', {}).get('eitem', []):
