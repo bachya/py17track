@@ -4,6 +4,7 @@ verify_ssl = true
 
 [dev-packages]
 "flake8" = "*"
+Jinja2 = ">=2.10.1"
 aresponses = "*"
 astroid = "<2.2.0"
 detox = "*"
