@@ -18,14 +18,14 @@ async def main() -> None:
         try:
             client = Client(websession)
 
-            await client.profile.login('<EMAIL>', '<PASSWORD>')
-            _LOGGER.info('Account ID: %s', client.profile.account_id)
+            await client.profile.login("<EMAIL>", "<PASSWORD>")
+            _LOGGER.info("Account ID: %s", client.profile.account_id)
 
             summary = await client.profile.summary()
-            _LOGGER.info('Account Summary: %s', summary)
+            _LOGGER.info("Account Summary: %s", summary)
 
             packages = await client.profile.packages()
-            _LOGGER.info('Package Summary: %s', packages)
+            _LOGGER.info("Package Summary: %s", packages)
         except SeventeenTrackError as err:
             print(err)
 
