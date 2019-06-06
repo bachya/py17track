@@ -11,11 +11,10 @@ from py17track.errors import RequestError
 async def test_bad_request(aresponses, event_loop):
     """Test that a failed login returns the correct response."""
     aresponses.add(
-        'random.domain', '/no/good', 'get',
-        aresponses.Response(
-            text='', status=404))
+        "random.domain", "/no/good", "get", aresponses.Response(text="", status=404)
+    )
 
     with pytest.raises(RequestError):
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = Client(websession)
-            await client._request('get', 'https://random.domain/no/good')
+            await client._request("get", "https://random.domain/no/good")
