@@ -6,6 +6,7 @@ init:
 	pip3 install --upgrade pip pipenv
 	pipenv lock
 	pipenv install --three --dev
+	pipenv run pre-commit install
 lint:
 	pipenv run flake8 py17track
 	pipenv run pydocstyle py17track
