@@ -27,7 +27,7 @@ class Client:  # pylint: disable=too-few-public-methods
         *,
         headers: dict = None,
         params: dict = None,
-        json: dict = None
+        json: dict = None,
     ) -> dict:
         """Make a request against the RainMachine device."""
         if not headers:
@@ -41,4 +41,4 @@ class Client:  # pylint: disable=too-few-public-methods
                 data = await resp.json(content_type=None)
                 return data
         except ClientError as err:
-            raise RequestError("Error requesting data from {}: {}".format(url, err))
+            raise RequestError(f"Error requesting data from {url}: {err}")
