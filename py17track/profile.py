@@ -1,14 +1,14 @@
 """Define interaction with a user profile."""
 import json
 import logging
-from typing import Coroutine, Callable, Union
+from typing import Coroutine, Callable, List, Optional, Union
 
 from .package import PACKAGE_STATUS_MAP, Package
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER: logging.Logger = logging.getLogger(__name__)
 
-API_URL_BUYER = "https://buyer.17track.net/orderapi/call"
-API_URL_USER = "https://user.17track.net/userapi/call"
+API_URL_BUYER: str = "https://buyer.17track.net/orderapi/call"
+API_URL_USER: str = "https://user.17track.net/userapi/call"
 
 
 class Profile:
@@ -16,12 +16,12 @@ class Profile:
 
     def __init__(self, request: Callable[..., Coroutine]) -> None:
         """Initialize."""
-        self._request = request
-        self.account_id = None
+        self._request: Callable[..., Coroutine] = request
+        self.account_id: Optional[str] = None
 
     async def login(self, email: str, password: str) -> bool:
         """Login to the profile."""
-        login_resp = await self._request(
+        login_resp: dict = await self._request(
             "post",
             API_URL_USER,
             json={
@@ -45,7 +45,7 @@ class Profile:
         self, package_state: Union[int, str] = "", show_archived: bool = False
     ) -> list:
         """Get the list of packages associated with the account."""
-        packages_resp = await self._request(
+        packages_resp: dict = await self._request(
             "post",
             API_URL_BUYER,
             json={
@@ -65,15 +65,14 @@ class Profile:
 
         _LOGGER.debug("Packages response: %s", packages_resp)
 
-        packages = []
+        packages: List[Package] = []
         for package in packages_resp.get("Json", []):
-            last_event = package.get("FLastEvent")
-            if last_event:
-                event = json.loads(last_event)
-            else:
-                event = {}
+            event: dict = {}
+            last_event_raw: str = package.get("FLastEvent")
+            if last_event_raw:
+                event = json.loads(last_event_raw)
 
-            kwargs = {
+            kwargs: dict = {
                 "destination_country": package.get("FSecondCountry", 0),
                 "friendly_name": package.get("FRemark"),
                 "info_text": event.get("z"),
@@ -87,7 +86,7 @@ class Profile:
 
     async def summary(self, show_archived: bool = False) -> dict:
         """Get a quick summary of how many packages are in an account."""
-        summary_resp = await self._request(
+        summary_resp: dict = await self._request(
             "post",
             API_URL_BUYER,
             json={
@@ -100,7 +99,7 @@ class Profile:
 
         _LOGGER.debug("Summary response: %s", summary_resp)
 
-        results = {}
+        results: dict = {}
         for kind in summary_resp.get("Json", {}).get("eitem", []):
             results[PACKAGE_STATUS_MAP[kind["e"]]] = kind["ec"]
         return results

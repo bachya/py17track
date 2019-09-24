@@ -1,7 +1,9 @@
 """Define a simple structure for a package."""
+from typing import Dict, Optional
+
 import attr
 
-COUNTRY_MAP = {
+COUNTRY_MAP: Dict[int, str] = {
     0: "Unknown",
     102: "Afghanistan",
     103: "Albania",
@@ -233,7 +235,7 @@ COUNTRY_MAP = {
     9901: "Overseas Territory [NZ]",
 }
 
-PACKAGE_STATUS_MAP = {
+PACKAGE_STATUS_MAP: Dict[int, str] = {
     0: "Not Found",
     10: "In Transit",
     20: "Expired",
@@ -243,7 +245,7 @@ PACKAGE_STATUS_MAP = {
     50: "Returned",
 }
 
-PACKAGE_TYPE_MAP = {
+PACKAGE_TYPE_MAP: Dict[int, str] = {
     0: "Unknown",
     1: "Small Registered Package",
     2: "Registered Parcel",
@@ -255,17 +257,16 @@ PACKAGE_TYPE_MAP = {
 class Package:
     """Define a package object."""
 
-    tracking_number = attr.ib()
-    destination_country = attr.ib(default=0)
-    friendly_name = attr.ib(default=None)
-    info_text = attr.ib(default=None)
-    location = attr.ib(default="")
-    origin_country = attr.ib(default=0)
-    package_type = attr.ib(default=0)
-    status = attr.ib(default=0)
-    tracking_info_language = attr.ib(default="Unknown")
+    tracking_number: str = attr.ib()
+    destination_country: int = attr.ib(default=0)
+    friendly_name: Optional[str] = attr.ib(default=None)
+    info_text: Optional[str] = attr.ib(default=None)
+    location: str = attr.ib(default="")
+    origin_country: int = attr.ib(default=0)
+    package_type: int = attr.ib(default=0)
+    status: int = attr.ib(default=0)
+    tracking_info_language: str = attr.ib(default="Unknown")
 
-    # pylint: disable=attribute-defined-outside-init
     def __attrs_post_init__(self):
         """Do some post-init processing."""
         object.__setattr__(
