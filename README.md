@@ -19,12 +19,8 @@ API may stop working at any moment.
 
 `py17track` is currently supported on:
 
-* Python 3.5
 * Python 3.6
 * Python 3.7
-
-However, running the test suite currently requires Python 3.6 or higher; tests
-run on Python 3.5 will fail.
 
 # Installation
 
