@@ -253,7 +253,9 @@ PACKAGE_TYPE_MAP: Dict[int, str] = {
 }
 
 
-@attr.s(frozen=True)  # pylint: disable=too-few-public-methods
+@attr.s(
+    frozen=True
+)  # pylint: disable=too-few-public-methods,too-many-instance-attributes
 class Package:
     """Define a package object."""
 
