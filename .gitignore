@@ -1,7 +1,9 @@
 .coverage
 .mypy_cache
 .tox/
-Pipfile.lock
-coverage.xml
+.venv
+__pycache__/
 py17track.egg-info
+coverage.xml
+poetry.lock
 tags
