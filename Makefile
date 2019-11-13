@@ -8,6 +8,7 @@ init:
 	.venv/bin/pip3 install poetry
 	. .venv/bin/activate; poetry lock; poetry install; pre-commit install
 lint:
+	.venv/bin/black --check --fast py17track
 	.venv/bin/flake8 py17track
 	.venv/bin/pydocstyle py17track
 	.venv/bin/pylint py17track

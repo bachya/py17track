@@ -1,6 +1,6 @@
 # 📦 py17track: A Simple Python API for 17track.net
 
-[![Travis CI](https://travis-ci.org/bachya/py17track.svg?branch=master)](https://travis-ci.org/bachya/py17track)
+[![CI](https://github.com/bachya/py17track/workflows/CI/badge.svg)](https://github.com/bachya/py17track/actions)
 [![PyPi](https://img.shields.io/pypi/v/py17track.svg)](https://pypi.python.org/pypi/py17track)
 [![Version](https://img.shields.io/pypi/pyversions/py17track.svg)](https://pypi.python.org/pypi/py17track)
 [![License](https://img.shields.io/pypi/l/py17track.svg)](https://github.com/bachya/py17track/blob/master/LICENSE)
