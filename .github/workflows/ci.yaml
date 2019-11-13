@@ -44,13 +44,13 @@ jobs:
           poetry install
       - name: lint
         run: |
-          poetry run black --check --fast aioambient
-          poetry run flake8 aioambient
-          poetry run pydocstyle aioambient
-          poetry run pylint aioambient
+          poetry run black --check --fast py17track
+          poetry run flake8 py17track
+          poetry run pydocstyle py17track
+          poetry run pylint py17track
       - name: typing
         run: |
-          poetry run mypy --ignore-missing-imports aioambient
+          poetry run mypy --ignore-missing-imports py17track
 
   coverage:
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
           pip install poetry
           poetry install
       - run: |
-          poetry run py.test -s --verbose --cov-report term-missing --cov-report xml --cov=aioambient tests
+          poetry run py.test -s --verbose --cov-report term-missing --cov-report xml --cov=py17track tests
       - uses: codecov/codecov-action@v1.0.3
         with:
           token: ${{secrets.CODECOV_TOKEN}}
