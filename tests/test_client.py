@@ -2,7 +2,6 @@
 # pylint: disable=redefined-outer-name,unused-import
 import aiohttp
 import pytest
-
 from py17track import Client
 from py17track.errors import RequestError
 

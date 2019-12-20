@@ -1,7 +1,7 @@
 """Define interaction with a user profile."""
 import json
 import logging
-from typing import Coroutine, Callable, List, Optional, Union
+from typing import Callable, Coroutine, List, Optional, Union
 
 from .package import PACKAGE_STATUS_MAP, Package
 

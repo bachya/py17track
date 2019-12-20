@@ -4,7 +4,6 @@ import json
 
 import aiohttp
 import pytest
-
 from py17track import Client
 
 from .const import TEST_EMAIL, TEST_PASSWORD
