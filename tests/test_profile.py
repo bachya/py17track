@@ -1,98 +1,94 @@
 """Define tests for the client object."""
-# pylint: disable=redefined-outer-name,unused-import
-import json
-
 import aiohttp
 import pytest
 from py17track import Client
 
-from .const import TEST_EMAIL, TEST_PASSWORD
-from .fixtures.profile import *  # noqa
+from .common import TEST_EMAIL, TEST_PASSWORD, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_login_failure(aresponses, authentication_failure_json, event_loop):
+async def test_login_failure(aresponses):
     """Test that a failed login returns the correct response."""
     aresponses.add(
         "user.17track.net",
         "/userapi/call",
         "post",
-        aresponses.Response(text=json.dumps(authentication_failure_json), status=200),
+        aresponses.Response(
+            text=load_fixture("authentication_failure_response.json"), status=200
+        ),
     )
 
-    async with aiohttp.ClientSession(loop=event_loop) as websession:
+    async with aiohttp.ClientSession() as websession:
         client = Client(websession)
         login_result = await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-
         assert login_result is False
 
 
 @pytest.mark.asyncio
-async def test_login_success(aresponses, authentication_success_json, event_loop):
+async def test_login_success(aresponses):
     """Test that a successful login returns the correct response."""
     aresponses.add(
         "user.17track.net",
         "/userapi/call",
         "post",
-        aresponses.Response(text=json.dumps(authentication_success_json), status=200),
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
     )
 
-    async with aiohttp.ClientSession(loop=event_loop) as websession:
+    async with aiohttp.ClientSession() as websession:
         client = Client(websession)
         login_result = await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-
         assert login_result is True
 
 
 @pytest.mark.asyncio
-async def test_packages(
-    aresponses, authentication_success_json, event_loop, packages_json
-):
+async def test_packages(aresponses):
     """Test getting packages."""
     aresponses.add(
         "user.17track.net",
         "/userapi/call",
         "post",
-        aresponses.Response(text=json.dumps(authentication_success_json), status=200),
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
     )
     aresponses.add(
         "buyer.17track.net",
         "/orderapi/call",
         "post",
-        aresponses.Response(text=json.dumps(packages_json), status=200),
+        aresponses.Response(text=load_fixture("packages_response.json"), status=200),
     )
 
-    async with aiohttp.ClientSession(loop=event_loop) as websession:
+    async with aiohttp.ClientSession() as websession:
         client = Client(websession)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
-
         assert len(packages) == 2
 
 
 @pytest.mark.asyncio
-async def test_summary(
-    aresponses, authentication_success_json, event_loop, summary_json
-):
+async def test_summary(aresponses):
     """Test getting package summary."""
     aresponses.add(
         "user.17track.net",
         "/userapi/call",
         "post",
-        aresponses.Response(text=json.dumps(authentication_success_json), status=200),
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
     )
     aresponses.add(
         "buyer.17track.net",
         "/orderapi/call",
         "post",
-        aresponses.Response(text=json.dumps(summary_json), status=200),
+        aresponses.Response(text=load_fixture("summary_response.json"), status=200),
     )
 
-    async with aiohttp.ClientSession(loop=event_loop) as websession:
+    async with aiohttp.ClientSession() as websession:
         client = Client(websession)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         summary = await client.profile.summary()
-
         assert summary["Delivered"] == 0
         assert summary["Expired"] == 0
         assert summary["In Transit"] == 6
