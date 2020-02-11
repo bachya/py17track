@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py17track"
-version = "2.2.4"
+version = "2.2.5"
 description = "A Simple Python API for 17track.net"
 readme = "README.md"
 authors = ["Aaron Bach <bachya1208@gmail.com>"]
