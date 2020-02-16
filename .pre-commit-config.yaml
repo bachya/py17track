@@ -46,3 +46,8 @@ repos:
     hooks:
       - id: mypy
         files: ^py17track/.+\.py$
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 5.0.2
+    hooks:
+      - id: pydocstyle
+        files: ^((py17track|tests)/.+)?[^/]+\.py$
