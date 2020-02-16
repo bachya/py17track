@@ -1,6 +1,7 @@
 """Define tests for the client object."""
 import aiohttp
 import pytest
+
 from py17track import Client
 
 from .common import TEST_EMAIL, TEST_PASSWORD, load_fixture

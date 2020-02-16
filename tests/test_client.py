@@ -1,6 +1,7 @@
 """Define tests for the client object."""
 import aiohttp
 import pytest
+
 from py17track import Client
 from py17track.errors import RequestError
 
