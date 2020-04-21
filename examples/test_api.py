@@ -14,9 +14,9 @@ async def main() -> None:
     """Create the aiohttp session and run the example."""
     logging.basicConfig(level=logging.INFO)
 
-    async with ClientSession() as websession:
+    async with ClientSession() as session:
         try:
-            client = Client(websession)
+            client = Client(session=session)
 
             await client.profile.login("<EMAIL>", "<PASSWORD>")
             _LOGGER.info("Account ID: %s", client.profile.account_id)
@@ -30,4 +30,4 @@ async def main() -> None:
             print(err)
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())

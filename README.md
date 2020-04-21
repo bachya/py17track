@@ -31,9 +31,6 @@ pip install py17track
 
 # Usage
 
-`py17track` starts within an
-[aiohttp](https://aiohttp.readthedocs.io/en/stable/) `ClientSession`:
-
 ```python
 import asyncio
 
@@ -43,15 +40,33 @@ from py17track import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-      # YOUR CODE HERE
+    """Run!"""
+    client = Client()
+
+    # Login to 17track.net:
+    await client.profile.login('<EMAIL>', '<PASSWORD>')
+
+    # Get the account ID:
+    client.profile.account_id
+    # >>> 1234567890987654321
+
+    # Get a summary of the user's packages:
+    summary = await client.profile.summary()
+    # >>> {'In Transit': 3, 'Expired': 3, ... }
+
+    # Get all packages associated with a user's account:
+    packages = await client.profile.packages()
+    # >>> [py17track.package.Package(..), ...]
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
-Create a client then get to it:
+By default, the library creates a new connection to 17track with each coroutine. If you
+are calling a large number of coroutines (or merely want to squeeze out every second of
+runtime savings possible), an
+[`aiohttp`](https://github.com/aio-libs/aiohttp) `ClientSession` can be used for connection
+pooling:
 
 ```python
 import asyncio
@@ -62,27 +77,14 @@ from py17track import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-      client = Client(websession)
+    """Run!"""
+    async with ClientSession() as session:
+        client = Client(session=session)
 
-      # Login to 17track.net:
-      await client.profile.login('<EMAIL>', '<PASSWORD>')
-
-      # Get the account ID:
-      client.profile.account_id
-      # >>> 1234567890987654321
-
-      # Get a summary of the user's packages:
-      summary = await client.profile.summary()
-      # >>> {'In Transit': 3, 'Expired': 3, ... }
-
-      # Get all packages associated with a user's account:
-      packages = await client.profile.packages()
-      # >>> [py17track.package.Package(..), ...]
+        # ...
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
 Each `Package` object has the following info:
@@ -103,7 +105,7 @@ Each `Package` object has the following info:
   or [initiate a discussion on one](https://github.com/bachya/py17track/issues/new).
 2. [Fork the repository](https://github.com/bachya/py17track/fork).
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
-4. (_optional, but highly recommended_) Enter the virtual environment: `source ./venv/bin/activate`
+4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`
 5. Install the dev environment: `script/setup`
 6. Code your new feature or bug fix.
 7. Write tests that cover your new functionality.
