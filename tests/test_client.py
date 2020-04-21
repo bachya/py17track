@@ -14,6 +14,6 @@ async def test_bad_request(aresponses):
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client._request("get", "https://random.domain/no/good")

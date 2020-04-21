@@ -19,8 +19,8 @@ async def test_login_failure(aresponses):
         ),
     )
 
-    async with aiohttp.ClientSession() as websession:
-        client = Client(websession)
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
         login_result = await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         assert login_result is False
 
@@ -37,10 +37,27 @@ async def test_login_success(aresponses):
         ),
     )
 
-    async with aiohttp.ClientSession() as websession:
-        client = Client(websession)
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
         login_result = await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         assert login_result is True
+
+
+@pytest.mark.asyncio
+async def test_no_explicit_session(aresponses):
+    """Test not providing an explicit aiohttp ClientSession."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+
+    client = Client()
+    login_result = await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+    assert login_result is True
 
 
 @pytest.mark.asyncio
@@ -61,8 +78,8 @@ async def test_packages(aresponses):
         aresponses.Response(text=load_fixture("packages_response.json"), status=200),
     )
 
-    async with aiohttp.ClientSession() as websession:
-        client = Client(websession)
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
         assert len(packages) == 2
@@ -86,8 +103,8 @@ async def test_summary(aresponses):
         aresponses.Response(text=load_fixture("summary_response.json"), status=200),
     )
 
-    async with aiohttp.ClientSession() as websession:
-        client = Client(websession)
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         summary = await client.profile.summary()
         assert summary["Delivered"] == 0

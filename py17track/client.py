@@ -1,7 +1,7 @@
 """Define a 17track.net client."""
 from typing import Optional
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError
 
 from .errors import RequestError
@@ -9,16 +9,17 @@ from .profile import Profile
 
 # from .track import Track
 
+DEFAULT_TIMEOUT: int = 10
+
 
 class Client:  # pylint: disable=too-few-public-methods
     """Define the client."""
 
-    def __init__(self, websession: ClientSession) -> None:
+    def __init__(self, *, session: Optional[ClientSession] = None) -> None:
         """Initialize."""
-        self._websession: ClientSession = websession
+        self._session: ClientSession = session
 
         self.profile: Profile = Profile(self._request)
-
         # This is disabled until a workaround can be found:
         # self.track = Track(self._request)
 
@@ -32,11 +33,15 @@ class Client:  # pylint: disable=too-few-public-methods
         json: Optional[dict] = None,
     ) -> dict:
         """Make a request against the RainMachine device."""
-        if not headers:
-            headers = {}
+        use_running_session = self._session and not self._session.closed
+
+        if use_running_session:
+            session = self._session
+        else:
+            session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
 
         try:
-            async with self._websession.request(
+            async with session.request(
                 method, url, headers=headers, params=params, json=json
             ) as resp:
                 resp.raise_for_status()
@@ -44,3 +49,6 @@ class Client:  # pylint: disable=too-few-public-methods
                 return data
         except ClientError as err:
             raise RequestError(f"Error requesting data from {url}: {err}")
+        finally:
+            if not use_running_session:
+                await session.close()
