@@ -22,6 +22,7 @@ API may stop working at any moment.
 * Python 3.6
 * Python 3.7
 * Python 3.8
+* Python 3.9
 
 # Installation
 
