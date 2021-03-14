@@ -94,6 +94,7 @@ Each `Package` object has the following info:
 * `friendly_name`: the human-friendly name of the package
 * `info`: a text description of the latest status
 * `location`: the current location (if known)
+* `timestamp`: the timestamp of the latest event
 * `origin_country`: the country the package was shipped from
 * `package_type`: the type of package (if known)
 * `status`: the overall package status ("In Transit", "Delivered", etc.)
