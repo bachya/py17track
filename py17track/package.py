@@ -264,6 +264,7 @@ class Package:
     friendly_name: Optional[str] = attr.ib(default=None)
     info_text: Optional[str] = attr.ib(default=None)
     location: str = attr.ib(default="")
+    timestamp: str = attr.ib(default="")
     origin_country: int = attr.ib(default=0)
     package_type: int = attr.ib(default=0)
     status: int = attr.ib(default=0)

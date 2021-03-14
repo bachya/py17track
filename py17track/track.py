@@ -33,6 +33,7 @@ class Track:  # pylint: disable=too-few-public-methods
                 "destination_country": package_info.get("c"),
                 "info_text": package_info.get("z0", {}).get("z"),
                 "location": package_info.get("z0", {}).get("c"),
+                "timestamp": package_info.get("z0", {}).get("a"),
                 "origin_country": package_info.get("b"),
                 "package_type": package_info.get("d", 0),
                 "status": package_info.get("e", 0),
