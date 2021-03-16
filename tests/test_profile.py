@@ -82,7 +82,11 @@ async def test_packages(aresponses):
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
-        assert len(packages) == 2
+        assert len(packages) == 5
+        assert packages[0].location == "Paris"
+        assert packages[1].location == "Spain"
+        assert packages[2].location == "Milano Italy"
+        assert packages[3].location == ""
 
 
 @pytest.mark.asyncio
