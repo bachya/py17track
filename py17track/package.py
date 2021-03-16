@@ -281,7 +281,9 @@ class Package:
         object.__setattr__(self, "origin_country", COUNTRY_MAP[self.origin_country])
         object.__setattr__(self, "package_type", PACKAGE_TYPE_MAP[self.package_type])
         object.__setattr__(self, "status", PACKAGE_STATUS_MAP[self.status])
-        timestamp_loc = timezone(self.tz).localize(datetime.strptime(self.timestamp, '%Y-%m-%d %H:%M'))
-        timestamp_utc = timestamp_loc.astimezone(timezone("UTC")).strftime("%Y-%m-%d %H:%M:%S")
-        object.__setattr__(self, "timestamp", timestamp_utc)
-        object.__setattr__(self, "tz", "UTC")
+
+        if self.timestamp is not None:
+            timestamp_loc = timezone(self.tz).localize(datetime.strptime(self.timestamp, '%Y-%m-%d %H:%M'))
+            timestamp_utc = timestamp_loc.astimezone(timezone("UTC")).strftime("%Y-%m-%d %H:%M:%S")
+            object.__setattr__(self, "timestamp", timestamp_utc)
+            object.__setattr__(self, "tz", "UTC")
