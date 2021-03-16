@@ -1,5 +1,6 @@
 """Define tests for the client object."""
 from datetime import datetime
+
 import aiohttp
 import pytest
 from pytz import UTC, timezone
