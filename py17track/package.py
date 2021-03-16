@@ -1,5 +1,6 @@
 """Define a simple structure for a package."""
 from datetime import datetime
+from pytz import timezone
 from typing import Dict, Optional
 
 import attr
