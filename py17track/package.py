@@ -282,8 +282,17 @@ class Package:
         object.__setattr__(self, "package_type", PACKAGE_TYPE_MAP[self.package_type])
         object.__setattr__(self, "status", PACKAGE_STATUS_MAP[self.status])
 
-        if self.timestamp is not None and self.tz != "UTC":
-            timestamp_loc = timezone(self.tz).localize(
-                datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M")
-            )
-            object.__setattr__(self, "timestamp", timestamp_loc.astimezone(UTC))
+        if self.timestamp is not None:
+            try:
+                tz = timezone(self.tz)
+                timestamp = datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M").astimezone(tz)
+            except ValueError:
+                try:
+                    timestamp = datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M:%S").astimezone(tz)
+                except ValueError:
+                    timestamp = datetime(1970, 1, 1, tzinfo=UTC)
+
+            if self.tz != "UTC":
+                timestamp = timestamp.astimezone(UTC)
+
+            object.__setattr__(self, "timestamp", timestamp)
