@@ -137,8 +137,8 @@ async def test_user_defined_timezone(aresponses):
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages(tz="Europe/Berlin")
         assert len(packages) == 2
-        assert packages[0].timestamp == datetime.(2018, 4, 23, 12, 2).astimezone(timezone("Europe/Berlin"))
-        assert packages[1].timestamp == datetime.(2018, 5, 4, 20, 22, 13).astimezone(timezone("Europe/Berlin"))
+        assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(timezone("Europe/Berlin"))
+        assert packages[1].timestamp == datetime(2018, 5, 4, 20, 22, 13).astimezone(timezone("Europe/Berlin"))
 
 
 @pytest.mark.asyncio
