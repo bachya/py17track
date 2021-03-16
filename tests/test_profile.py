@@ -1,10 +1,10 @@
 """Define tests for the client object."""
+from datetime import datetime
 import aiohttp
 import pytest
+from pytz import UTC, timezone
 
 from py17track import Client
-from datetime import datetime
-from pytz import UTC, timezone
 
 from .common import TEST_EMAIL, TEST_PASSWORD, load_fixture
 
@@ -88,8 +88,8 @@ async def test_packages(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_default_timezone(aresponses):
-    """Test getting packages with user-defined timezone."""
+async def test_packages_default_timezone(aresponses):
+    """Test getting packages with default timezone."""
     aresponses.add(
         "user.17track.net",
         "/userapi/call",
@@ -111,11 +111,10 @@ async def test_default_timezone(aresponses):
         packages = await client.profile.packages()
         assert len(packages) == 2
         assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(UTC)
-        assert packages[1].timestamp == datetime(2018, 5, 4, 20, 22, 13).astimezone(UTC)
 
 
 @pytest.mark.asyncio
-async def test_user_defined_timezone(aresponses):
+async def test_packages_user_defined_timezone(aresponses):
     """Test getting packages with user-defined timezone."""
     aresponses.add(
         "user.17track.net",
@@ -137,8 +136,9 @@ async def test_user_defined_timezone(aresponses):
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages(tz="Europe/Berlin")
         assert len(packages) == 2
-        assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(timezone("Europe/Berlin"))
-        assert packages[1].timestamp == datetime(2018, 5, 4, 20, 22, 13).astimezone(timezone("Europe/Berlin"))
+        assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(
+            timezone("Europe/Berlin")
+        )
 
 
 @pytest.mark.asyncio
