@@ -85,7 +85,7 @@ async def test_packages(aresponses):
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
-        assert len(packages) == 2
+        assert len(packages) == 3
 
 
 @pytest.mark.asyncio
@@ -110,8 +110,9 @@ async def test_packages_default_timezone(aresponses):
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
-        assert len(packages) == 2
+        assert len(packages) == 3
         assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(UTC)
+        assert packages[1].timestamp == datetime(2019, 2, 26, 1, 5, 34).astimezone(UTC)
 
 
 @pytest.mark.asyncio
@@ -136,8 +137,11 @@ async def test_packages_user_defined_timezone(aresponses):
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages(tz="Europe/Berlin")
-        assert len(packages) == 2
+        assert len(packages) == 3
         assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(
+            timezone("Europe/Berlin")
+        )
+        assert packages[1].timestamp == datetime(2019, 2, 26, 1, 5, 34).astimezone(
             timezone("Europe/Berlin")
         )
 
