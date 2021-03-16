@@ -4,6 +4,7 @@ from typing import Dict, Optional
 
 import attr
 from pytz import timezone
+from pytz import UTC
 
 COUNTRY_MAP: Dict[int, str] = {
     0: "Unknown",
@@ -282,10 +283,8 @@ class Package:
         object.__setattr__(self, "package_type", PACKAGE_TYPE_MAP[self.package_type])
         object.__setattr__(self, "status", PACKAGE_STATUS_MAP[self.status])
 
-        if self.timestamp is not None:
+        if self.timestamp is not None and self.tz != "UTC":
             timestamp_loc = timezone(self.tz).localize(
                 datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M")
             )
-            timestamp_utc = timestamp_loc.astimezone(timezone("UTC"))
-            object.__setattr__(self, "timestamp", timestamp_utc)
-            object.__setattr__(self, "tz", "UTC")
+            object.__setattr__(self, "timestamp", timestamp_loc.astimezone(UTC))
