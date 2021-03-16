@@ -7,3 +7,4 @@ py17track.egg-info
 coverage.xml
 poetry.lock
 tags
+.vscode
