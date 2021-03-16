@@ -1,5 +1,7 @@
 """Define a simple structure for a package."""
 from typing import Dict, Optional
+from datetime import datetime
+from pytz import timezone
 
 import attr
 
@@ -269,6 +271,7 @@ class Package:
     package_type: int = attr.ib(default=0)
     status: int = attr.ib(default=0)
     tracking_info_language: str = attr.ib(default="Unknown")
+    tz: str = attr.ib(default="UTC")
 
     def __attrs_post_init__(self):
         """Do some post-init processing."""
@@ -278,3 +281,7 @@ class Package:
         object.__setattr__(self, "origin_country", COUNTRY_MAP[self.origin_country])
         object.__setattr__(self, "package_type", PACKAGE_TYPE_MAP[self.package_type])
         object.__setattr__(self, "status", PACKAGE_STATUS_MAP[self.status])
+        timestamp_loc = timezone(self.tz).localize(datetime.strptime(self.timestamp, '%Y-%m-%d %H:%M'))
+        timestamp_utc = timestamp_loc.astimezone(timezone("UTC")).strftime("%Y-%m-%d %H:%M:%S")
+        object.__setattr__(self, "timestamp", timestamp_utc)
+        object.__setattr__(self, "tz", "UTC")
