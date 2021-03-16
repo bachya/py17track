@@ -42,7 +42,10 @@ class Profile:
         return True
 
     async def packages(
-        self, package_state: Union[int, str] = "", show_archived: bool = False
+        self,
+        package_state: Union[int, str] = "",
+        show_archived: bool = False,
+        tz: str = "UTC"
     ) -> list:
         """Get the list of packages associated with the account."""
         packages_resp: dict = await self._request(
@@ -78,6 +81,7 @@ class Profile:
                 "info_text": event.get("z"),
                 "location": event.get("c"),
                 "timestamp": event.get("a"),
+                "tz": tz,
                 "origin_country": package.get("FFirstCountry", 0),
                 "package_type": package.get("FTrackStateType", 0),
                 "status": package.get("FPackageState", 0),
