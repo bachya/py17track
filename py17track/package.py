@@ -3,8 +3,7 @@ from datetime import datetime
 from typing import Dict, Optional
 
 import attr
-from pytz import timezone
-from pytz import UTC
+from pytz import UTC, timezone
 
 COUNTRY_MAP: Dict[int, str] = {
     0: "Unknown",
