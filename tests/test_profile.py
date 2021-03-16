@@ -3,6 +3,8 @@ import aiohttp
 import pytest
 
 from py17track import Client
+from datetime import datetime
+from pytz import UTC, timezone
 
 from .common import TEST_EMAIL, TEST_PASSWORD, load_fixture
 
@@ -83,6 +85,60 @@ async def test_packages(aresponses):
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
         assert len(packages) == 2
+
+
+@pytest.mark.asyncio
+async def test_default_timezone(aresponses):
+    """Test getting packages with user-defined timezone."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("packages_response.json"), status=200),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        packages = await client.profile.packages()
+        assert len(packages) == 2
+        assert packages[0].timestamp == datetime.(2018, 4, 23, 12, 2).astimezone(UTC)
+        assert packages[1].timestamp == datetime.(2018, 5, 4, 20, 22, 13).astimezone(UTC)
+
+
+@pytest.mark.asyncio
+async def test_user_defined_timezone(aresponses):
+    """Test getting packages with user-defined timezone."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("packages_response.json"), status=200),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        packages = await client.profile.packages(tz="Europe/Berlin")
+        assert len(packages) == 2
+        assert packages[0].timestamp == datetime.(2018, 4, 23, 12, 2).astimezone(timezone("Europe/Berlin"))
+        assert packages[1].timestamp == datetime.(2018, 5, 4, 20, 22, 13).astimezone(timezone("Europe/Berlin"))
 
 
 @pytest.mark.asyncio
