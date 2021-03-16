@@ -110,8 +110,8 @@ async def test_default_timezone(aresponses):
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
         assert len(packages) == 2
-        assert packages[0].timestamp == datetime.(2018, 4, 23, 12, 2).astimezone(UTC)
-        assert packages[1].timestamp == datetime.(2018, 5, 4, 20, 22, 13).astimezone(UTC)
+        assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(UTC)
+        assert packages[1].timestamp == datetime(2018, 5, 4, 20, 22, 13).astimezone(UTC)
 
 
 @pytest.mark.asyncio
