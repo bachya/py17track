@@ -286,8 +286,6 @@ class Package:
             timestamp_loc = timezone(self.tz).localize(
                 datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M")
             )
-            timestamp_utc = timestamp_loc.astimezone(timezone("UTC")).strftime(
-                "%Y-%m-%d %H:%M:%S"
-            )
+            timestamp_utc = timestamp_loc.astimezone(timezone("UTC"))
             object.__setattr__(self, "timestamp", timestamp_utc)
             object.__setattr__(self, "tz", "UTC")
