@@ -1,9 +1,10 @@
 """Define a simple structure for a package."""
 from datetime import datetime
-from pytz import timezone
 from typing import Dict, Optional
 
 import attr
+
+from pytz import timezone
 
 COUNTRY_MAP: Dict[int, str] = {
     0: "Unknown",
@@ -284,10 +285,10 @@ class Package:
 
         if self.timestamp is not None:
             timestamp_loc = timezone(self.tz).localize(
-                datetime.strptime(self.timestamp, '%Y-%m-%d %H:%M')
+                datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M")
             )
-            timestamp_utc = timestamp_loc.astimezone(
-                timezone("UTC")
-            ).strftime("%Y-%m-%d %H:%M:%S")
+            timestamp_utc = timestamp_loc.astimezone(timezone("UTC")).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
             object.__setattr__(self, "timestamp", timestamp_utc)
             object.__setattr__(self, "tz", "UTC")
