@@ -79,7 +79,7 @@ class Profile:
                 "destination_country": package.get("FSecondCountry", 0),
                 "friendly_name": package.get("FRemark"),
                 "info_text": event.get("z"),
-                "location": event.get("c"),
+                "location": " ".join([event.get("c", ""), event.get("d", "")]).strip(),
                 "timestamp": event.get("a"),
                 "tz": tz,
                 "origin_country": package.get("FFirstCountry", 0),
