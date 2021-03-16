@@ -45,7 +45,7 @@ class Profile:
         self,
         package_state: Union[int, str] = "",
         show_archived: bool = False,
-        tz: str = "UTC"
+        tz: str = "UTC",
     ) -> list:
         """Get the list of packages associated with the account."""
         packages_resp: dict = await self._request(
