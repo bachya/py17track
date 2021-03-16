@@ -1,7 +1,9 @@
 """Define a simple structure for a package."""
+from datetime import datetime
 from typing import Dict, Optional
 
 import attr
+from pytz import UTC, timezone
 
 COUNTRY_MAP: Dict[int, str] = {
     0: "Unknown",
@@ -269,6 +271,7 @@ class Package:
     package_type: int = attr.ib(default=0)
     status: int = attr.ib(default=0)
     tracking_info_language: str = attr.ib(default="Unknown")
+    tz: str = attr.ib(default="UTC")
 
     def __attrs_post_init__(self):
         """Do some post-init processing."""
@@ -278,3 +281,22 @@ class Package:
         object.__setattr__(self, "origin_country", COUNTRY_MAP[self.origin_country])
         object.__setattr__(self, "package_type", PACKAGE_TYPE_MAP[self.package_type])
         object.__setattr__(self, "status", PACKAGE_STATUS_MAP[self.status])
+
+        if self.timestamp is not None:
+            try:
+                tz = timezone(self.tz)
+                timestamp = datetime.strptime(
+                    self.timestamp, "%Y-%m-%d %H:%M"
+                ).astimezone(tz)
+            except ValueError:
+                try:
+                    timestamp = datetime.strptime(
+                        self.timestamp, "%Y-%m-%d %H:%M:%S"
+                    ).astimezone(tz)
+                except ValueError:
+                    timestamp = datetime(1970, 1, 1, tzinfo=UTC)
+
+            if self.tz != "UTC":
+                timestamp = timestamp.astimezone(UTC)
+
+            object.__setattr__(self, "timestamp", timestamp)

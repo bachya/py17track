@@ -3,3 +3,4 @@ aresponses==1.1.2
 pytest-aiohttp==0.3.0
 pytest-cov==2.8.1
 pytest==5.4.1
+pytz>=2021.1
