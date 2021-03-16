@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Dict, Optional
 
 import attr
-
 from pytz import timezone
 
 COUNTRY_MAP: Dict[int, str] = {
