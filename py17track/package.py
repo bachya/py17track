@@ -285,14 +285,14 @@ class Package:
         if self.timestamp is not None:
             tz = timezone(self.tz)
             try:
-                timestamp = tz.localize(datetime.strptime(
-                    self.timestamp, "%Y-%m-%d %H:%M"
-                ))
+                timestamp = tz.localize(
+                    datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M")
+                )
             except ValueError:
                 try:
-                    timestamp = tz.localize(datetime.strptime(
-                        self.timestamp, "%Y-%m-%d %H:%M:%S"
-                    ))
+                    timestamp = tz.localize(
+                        datetime.strptime(self.timestamp, "%Y-%m-%d %H:%M:%S")
+                    )
                 except ValueError:
                     timestamp = datetime(1970, 1, 1, tzinfo=UTC)
 
