@@ -115,9 +115,9 @@ async def test_packages_default_timezone(aresponses):
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         packages = await client.profile.packages()
         assert len(packages) == 5
-        assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(UTC)
-        assert packages[1].timestamp == datetime(2019, 2, 26, 1, 5, 34).astimezone(UTC)
-        assert packages[2].timestamp == datetime(1970, 1, 1, tzinfo=UTC)
+        assert packages[0].timestamp.isoformat() == "2018-04-23T12:02:00+00:00"
+        assert packages[1].timestamp.isoformat() == "2019-02-26T01:05:34+00:00"
+        assert packages[2].timestamp.isoformat() == "1970-01-01T00:00:00+00:00"
 
 
 @pytest.mark.asyncio
@@ -141,15 +141,11 @@ async def test_packages_user_defined_timezone(aresponses):
     async with aiohttp.ClientSession() as session:
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-        packages = await client.profile.packages(tz="Europe/Berlin")
+        packages = await client.profile.packages(tz="Asia/Jakarta")
         assert len(packages) == 5
-        assert packages[0].timestamp == datetime(2018, 4, 23, 12, 2).astimezone(
-            timezone("Europe/Berlin")
-        )
-        assert packages[1].timestamp == datetime(2019, 2, 26, 1, 5, 34).astimezone(
-            timezone("Europe/Berlin")
-        )
-        assert packages[2].timestamp == datetime(1970, 1, 1, tzinfo=UTC)
+        assert packages[0].timestamp.isoformat() == "2018-04-23T05:02:00+00:00"
+        assert packages[1].timestamp.isoformat() == "2019-02-25T18:05:34+00:00"
+        assert packages[2].timestamp.isoformat() == "1970-01-01T00:00:00+00:00"
 
 
 @pytest.mark.asyncio
