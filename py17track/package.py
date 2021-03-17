@@ -283,16 +283,16 @@ class Package:
         object.__setattr__(self, "status", PACKAGE_STATUS_MAP[self.status])
 
         if self.timestamp is not None:
+            tz = timezone(self.tz)
             try:
-                tz = timezone(self.tz)
-                timestamp = datetime.strptime(
+                timestamp = tz.localize(datetime.strptime(
                     self.timestamp, "%Y-%m-%d %H:%M"
-                ).astimezone(tz)
+                ))
             except ValueError:
                 try:
-                    timestamp = datetime.strptime(
+                    timestamp = tz.localize(datetime.strptime(
                         self.timestamp, "%Y-%m-%d %H:%M:%S"
-                    ).astimezone(tz)
+                    ))
                 except ValueError:
                     timestamp = datetime(1970, 1, 1, tzinfo=UTC)
 
