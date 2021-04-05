@@ -177,3 +177,55 @@ async def test_summary(aresponses):
         assert summary["Ready to be Picked Up"] == 0
         assert summary["Returned"] == 0
         assert summary["Undelivered"] == 0
+
+
+@pytest.mark.asyncio
+async def test_add_new_package(aresponses):
+    """Test adding a new package."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("add_package_response.json"), status=200),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        add_result = await client.profile.add_packages(["LP00432912409987"])
+        assert add_result is True
+
+
+@pytest.mark.asyncio
+async def test_add_existing_package(aresponses):
+    """Test adding an existing new package."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("add_package_existing_response.json"), status=200
+        ),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        add_result = await client.profile.add_packages(["1234567890987654321"])
+        assert add_result is False

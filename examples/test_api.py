@@ -21,6 +21,8 @@ async def main() -> None:
             await client.profile.login("<EMAIL>", "<PASSWORD>")
             _LOGGER.info("Account ID: %s", client.profile.account_id)
 
+            # await client.profile.add_packages(["<PACKAGE NUMBER>"])
+
             summary = await client.profile.summary()
             _LOGGER.info("Account Summary: %s", summary)
 

@@ -108,3 +108,22 @@ class Profile:
         for kind in summary_resp.get("Json", {}).get("eitem", []):
             results[PACKAGE_STATUS_MAP[kind["e"]]] = kind["ec"]
         return results
+
+    async def add_packages(self, tracking_numbers: List[str]) -> bool:
+        """Add one or more packages by their numbers to the tracking list."""
+        add_resp: dict = await self._request(
+            "post",
+            API_URL_BUYER,
+            json={
+                "version": "1.0",
+                "method": "AddTrackNo",
+                "param": {"TrackNos": tracking_numbers},
+            },
+        )
+
+        _LOGGER.debug("Add packages response: %s", add_resp)
+
+        if add_resp.get("Code") != 0:
+            return False
+
+        return True

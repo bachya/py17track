@@ -1,0 +1,17 @@
+{
+  "Json": {
+    "Items": [
+      {
+        "TrackInfoId": "0",
+        "TrackNo": "1234567890987654321",
+        "ResultCode": -11010101
+      }
+    ],
+    "CanTrackNum": 40,
+    "UseTrackNum": 4,
+    "SuccessNum": 0,
+    "ErrorNum": 1
+  },
+  "Code": -11010101,
+  "Message": "Number(s) already exists."
+}
