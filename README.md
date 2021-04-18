@@ -60,7 +60,7 @@ async def main() -> None:
     # >>> [py17track.package.Package(..), ...]
     
     # Add new packages by tracking number
-    await client.profile.add_packages(['<PACKAGE1>, <PACKAGE2>'])
+    await client.profile.add_package('<TRACKING NUMBER>', '<FRIENDLY NAME>')
 
 
 asyncio.run(main())
