@@ -76,6 +76,7 @@ class Profile:
                 event = json.loads(last_event_raw)
 
             kwargs: dict = {
+                "id": package.get("FTrackInfoId"),
                 "destination_country": package.get("FSecondCountry", 0),
                 "friendly_name": package.get("FRemark"),
                 "info_text": event.get("z"),
@@ -109,21 +110,69 @@ class Profile:
             results[PACKAGE_STATUS_MAP[kind["e"]]] = kind["ec"]
         return results
 
-    async def add_packages(self, tracking_numbers: List[str]) -> bool:
-        """Add one or more packages by their numbers to the tracking list."""
+    async def add_package(
+        self, tracking_number: str, friendly_name: Optional[str] = None
+    ) -> bool:
+        """Add a package by tracking number to the tracking list."""
         add_resp: dict = await self._request(
             "post",
             API_URL_BUYER,
             json={
                 "version": "1.0",
                 "method": "AddTrackNo",
-                "param": {"TrackNos": tracking_numbers},
+                "param": {"TrackNos": [tracking_number]},
             },
         )
 
-        _LOGGER.debug("Add packages response: %s", add_resp)
+        _LOGGER.debug("Add package response: %s", add_resp)
 
         if add_resp.get("Code") != 0:
+            return False
+
+        if friendly_name is not None:
+            packages = await self.packages()
+            new_package = next(
+                filter(lambda p: (p.tracking_number == tracking_number), packages), None
+            )
+
+            if new_package is not None:
+                _LOGGER.debug(
+                    "Found internal ID of recently added package: %s", new_package.id
+                )
+
+                success = await self.set_friendly_name(new_package.id, friendly_name)
+                if success is False:
+                    _LOGGER.warning(
+                        "Couldn't set friendly name for % (ID: %s)",
+                        tracking_number,
+                        new_package.id,
+                    )
+            else:
+                _LOGGER.warning(
+                    "Couldn't find internal ID of recently added package (%s)",
+                    tracking_number,
+                )
+
+        return True
+
+    async def set_friendly_name(self, internal_id: str, friendly_name: str) -> bool:
+        """Set a friendly name to an already added tracking number.
+
+        internal_id is not the tracking number, it's the ID of an existing package.
+        """
+        remark_resp: dict = await self._request(
+            "post",
+            API_URL_BUYER,
+            json={
+                "version": "1.0",
+                "method": "SetTrackRemark",
+                "param": {"TrackInfoId": internal_id, "Remark": friendly_name},
+            },
+        )
+
+        _LOGGER.debug("Set friendly name response: %s", remark_resp)
+
+        if remark_resp.get("Code") != 0:
             return False
 
         return True

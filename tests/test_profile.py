@@ -200,7 +200,48 @@ async def test_add_new_package(aresponses):
     async with aiohttp.ClientSession() as session:
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-        add_result = await client.profile.add_packages(["LP00432912409987"])
+        add_result = await client.profile.add_package("LP00432912409987")
+        assert add_result is True
+
+
+@pytest.mark.asyncio
+async def test_add_new_package_with_friendly_name(aresponses):
+    """Test adding a new package with friendly name."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("add_package_response.json"), status=200),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("packages_response.json"), status=200),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("set_friendly_name_response.json"), status=200
+        ),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        add_result = await client.profile.add_package(
+            "1234567890987654321", "Friendly name"
+        )
         assert add_result is True
 
 
@@ -227,5 +268,5 @@ async def test_add_existing_package(aresponses):
     async with aiohttp.ClientSession() as session:
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-        add_result = await client.profile.add_packages(["1234567890987654321"])
+        add_result = await client.profile.add_package("1234567890987654321")
         assert add_result is False
