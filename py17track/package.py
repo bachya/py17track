@@ -262,7 +262,7 @@ class Package:
     """Define a package object."""
 
     tracking_number: str = attr.ib()
-    id: str = attr.ib()
+    id: Optional[str] = attr.ib(default=None)
     destination_country: int = attr.ib(default=0)
     friendly_name: Optional[str] = attr.ib(default=None)
     info_text: Optional[str] = attr.ib(default=None)

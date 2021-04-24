@@ -6,6 +6,7 @@ import pytest
 from pytz import UTC, timezone
 
 from py17track import Client
+from py17track.errors import RequestError
 
 from .common import TEST_EMAIL, TEST_PASSWORD, load_fixture
 
@@ -200,8 +201,7 @@ async def test_add_new_package(aresponses):
     async with aiohttp.ClientSession() as session:
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-        add_result = await client.profile.add_package("LP00432912409987")
-        assert add_result is True
+        await client.profile.add_package("LP00432912409987")
 
 
 @pytest.mark.asyncio
@@ -239,10 +239,7 @@ async def test_add_new_package_with_friendly_name(aresponses):
     async with aiohttp.ClientSession() as session:
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-        add_result = await client.profile.add_package(
-            "1234567890987654321", "Friendly name"
-        )
-        assert add_result is True
+        await client.profile.add_package("1234567890987654321", "Friendly name")
 
 
 @pytest.mark.asyncio
@@ -266,7 +263,7 @@ async def test_add_existing_package(aresponses):
     )
 
     async with aiohttp.ClientSession() as session:
-        client = Client(session=session)
-        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
-        add_result = await client.profile.add_package("1234567890987654321")
-        assert add_result is False
+        with pytest.raises(RequestError):
+            client = Client(session=session)
+            await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+            await client.profile.add_package("1234567890987654321")
