@@ -6,7 +6,7 @@ import pytest
 from pytz import UTC, timezone
 
 from py17track import Client
-from py17track.errors import RequestError
+from py17track.errors import InvalidTrackingNumberError, RequestError
 
 from .common import TEST_EMAIL, TEST_PASSWORD, load_fixture
 
@@ -240,6 +240,84 @@ async def test_add_new_package_with_friendly_name(aresponses):
         client = Client(session=session)
         await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
         await client.profile.add_package("1234567890987654321", "Friendly name")
+
+
+@pytest.mark.asyncio
+async def test_add_new_package_with_friendly_name_not_found(aresponses):
+    """Test adding a new package with friendly name but package not found after adding it."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("add_package_response.json"), status=200),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("packages_response.json"), status=200),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("set_friendly_name_response.json"), status=200
+        ),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        with pytest.raises(InvalidTrackingNumberError):
+            client = Client(session=session)
+            await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+            await client.profile.add_package("1234567890987654321567", "Friendly name")
+
+
+@pytest.mark.asyncio
+async def test_add_new_package_with_friendly_name_error_response(aresponses):
+    """Test adding a new package with friendly name but setting the name fails."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("add_package_response.json"), status=200),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(text=load_fixture("packages_response.json"), status=200),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("set_friendly_name_failure_response.json"), status=200
+        ),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        with pytest.raises(RequestError):
+            client = Client(session=session)
+            await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+            await client.profile.add_package("1234567890987654321", "Friendly name")
 
 
 @pytest.mark.asyncio
