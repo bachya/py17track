@@ -58,6 +58,9 @@ async def main() -> None:
     # Get all packages associated with a user's account:
     packages = await client.profile.packages()
     # >>> [py17track.package.Package(..), ...]
+    
+    # Add new packages by tracking number
+    await client.profile.add_package('<TRACKING NUMBER>', '<FRIENDLY NAME>')
 
 
 asyncio.run(main())
