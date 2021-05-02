@@ -19,7 +19,7 @@ use_parentheses = true
 
 [tool.poetry]
 name = "py17track"
-version = "3.2.1"
+version = "3.3.0"
 description = "A Simple Python API for 17track.net"
 readme = "README.md"
 authors = ["Aaron Bach <bachya1208@gmail.com>"]
