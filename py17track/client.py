@@ -17,7 +17,7 @@ class Client:  # pylint: disable=too-few-public-methods
 
     def __init__(self, *, session: Optional[ClientSession] = None) -> None:
         """Initialize."""
-        self._session: ClientSession = session
+        self._session: Optional[ClientSession] = session
 
         self.profile: Profile = Profile(self._request)
         # This is disabled until a workaround can be found:
@@ -35,9 +35,9 @@ class Client:  # pylint: disable=too-few-public-methods
         """Make a request against the RainMachine device."""
         use_running_session = self._session and not self._session.closed
 
-        if use_running_session:
+        if self._session is not None:
             session = self._session
-        else:
+        if not use_running_session:
             session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
 
         try:
