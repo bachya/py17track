@@ -94,6 +94,36 @@ async def test_packages(aresponses):
 
 
 @pytest.mark.asyncio
+async def test_packages_with_unknown_state(aresponses):
+    """Test getting packages."""
+    aresponses.add(
+        "user.17track.net",
+        "/userapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("authentication_success_response.json"), status=200
+        ),
+    )
+    aresponses.add(
+        "buyer.17track.net",
+        "/orderapi/call",
+        "post",
+        aresponses.Response(
+            text=load_fixture("packages_response_with_unknown_state.json"), status=200
+        ),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
+        await client.profile.login(TEST_EMAIL, TEST_PASSWORD)
+        packages = await client.profile.packages()
+        assert len(packages) == 3
+        assert packages[0].status == "Not Found"
+        assert packages[1].status == "In Transit"
+        assert packages[2].status == "Unknown"
+
+
+@pytest.mark.asyncio
 async def test_packages_default_timezone(aresponses):
     """Test getting packages with default timezone."""
     aresponses.add(
@@ -178,6 +208,7 @@ async def test_summary(aresponses):
         assert summary["Ready to be Picked Up"] == 0
         assert summary["Returned"] == 0
         assert summary["Undelivered"] == 0
+        assert summary["Unknown"] == 3
 
 
 @pytest.mark.asyncio

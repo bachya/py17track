@@ -108,7 +108,9 @@ class Profile:
 
         results: dict = {}
         for kind in summary_resp.get("Json", {}).get("eitem", []):
-            results[PACKAGE_STATUS_MAP[kind["e"]]] = kind["ec"]
+            key = PACKAGE_STATUS_MAP.get(kind["e"], "Unknown")
+            value = kind["ec"]
+            results[key] = value if key not in results else results[key] + value
         return results
 
     async def add_package(

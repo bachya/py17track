@@ -281,7 +281,9 @@ class Package:
         )
         object.__setattr__(self, "origin_country", COUNTRY_MAP[self.origin_country])
         object.__setattr__(self, "package_type", PACKAGE_TYPE_MAP[self.package_type])
-        object.__setattr__(self, "status", PACKAGE_STATUS_MAP[self.status])
+        object.__setattr__(
+            self, "status", PACKAGE_STATUS_MAP.get(self.status, "Unknown")
+        )
 
         if self.timestamp is not None:
             tz = timezone(self.tz)

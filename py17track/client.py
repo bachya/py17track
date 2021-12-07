@@ -17,7 +17,7 @@ class Client:  # pylint: disable=too-few-public-methods
 
     def __init__(self, *, session: Optional[ClientSession] = None) -> None:
         """Initialize."""
-        self._session: ClientSession = session
+        self._session: Optional[ClientSession] = session
 
         self.profile: Profile = Profile(self._request)
         # This is disabled until a workaround can be found:
@@ -39,6 +39,8 @@ class Client:  # pylint: disable=too-few-public-methods
             session = self._session
         else:
             session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
+
+        assert session
 
         try:
             async with session.request(
