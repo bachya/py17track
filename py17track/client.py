@@ -35,10 +35,12 @@ class Client:  # pylint: disable=too-few-public-methods
         """Make a request against the RainMachine device."""
         use_running_session = self._session and not self._session.closed
 
-        if self._session is not None:
+        if use_running_session:
             session = self._session
-        if not use_running_session:
+        else:
             session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
+
+        assert session
 
         try:
             async with session.request(
