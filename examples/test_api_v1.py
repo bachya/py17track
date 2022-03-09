@@ -4,7 +4,7 @@ import logging
 
 from aiohttp import ClientSession
 
-from py17track import Client
+from py17track import Client, Version
 from py17track.errors import SeventeenTrackError
 
 _LOGGER = logging.getLogger()
@@ -16,12 +16,9 @@ async def main() -> None:
 
     async with ClientSession() as session:
         try:
-            client = Client(session=session)
+            client = Client(version=Version.V1, session=session)
 
-            await client.profile.login("<EMAIL>", "<PASSWORD>")
-            _LOGGER.info("Account ID: %s", client.profile.account_id)
-
-            # await client.profile.add_package("<TRACKING NUMBER>", "<FRIENDLY NAME>")
+            client.profile.login("<TOKEN>")
 
             summary = await client.profile.summary()
             _LOGGER.info("Account Summary: %s", summary)

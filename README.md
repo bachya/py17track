@@ -11,6 +11,14 @@
 `py17track` is a simple Python library to track packages in
 [17track.net](http://www.17track.net/) accounts.
 
+## V1 API
+
+You can register an account first here: https://features.17track.net/en/api
+Each account will have 100 free tracking quota for testing.
+Once logged in, you can find the API token/Access key under Settings -> Security -> Access Key
+
+## Legacy API
+
 Since this is uses an unofficial API, there's no guarantee that 17track.net
 will provide every field for every package, all the time. Additionally, this
 API may stop working at any moment.
@@ -19,7 +27,6 @@ API may stop working at any moment.
 
 `py17track` is currently supported on:
 
-* Python 3.6
 * Python 3.7
 * Python 3.8
 * Python 3.9
@@ -38,19 +45,15 @@ import asyncio
 
 from aiohttp import ClientSession
 
-from py17track import Client
+from py17track import Client, Version
 
 
 async def main() -> None:
     """Run!"""
-    client = Client()
+    client = Client(version=Version.V1)
 
-    # Login to 17track.net:
-    await client.profile.login('<EMAIL>', '<PASSWORD>')
-
-    # Get the account ID:
-    client.profile.account_id
-    # >>> 1234567890987654321
+    # Login with API token:
+    client.profile.login("<TOKEN>")
 
     # Get a summary of the user's packages:
     summary = await client.profile.summary()
@@ -64,7 +67,8 @@ async def main() -> None:
     await client.profile.add_package('<TRACKING NUMBER>', '<FRIENDLY NAME>')
 
 
-asyncio.run(main())
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
 ```
 
 By default, the library creates a new connection to 17track with each coroutine. If you
@@ -89,7 +93,8 @@ async def main() -> None:
         # ...
 
 
-asyncio.run(main())
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
 ```
 
 Each `Package` object has the following info:
