@@ -27,10 +27,10 @@ API may stop working at any moment.
 
 `py17track` is currently supported on:
 
-* Python 3.7
-* Python 3.8
-* Python 3.9
-* Python 3.10
+- Python 3.7
+- Python 3.8
+- Python 3.9
+- Python 3.10
 
 # Installation
 
@@ -62,7 +62,7 @@ async def main() -> None:
     # Get all packages associated with a user's account:
     packages = await client.profile.packages()
     # >>> [py17track.package.Package(..), ...]
-    
+
     # Add new packages by tracking number
     await client.profile.add_package('<TRACKING NUMBER>', '<FRIENDLY NAME>')
 
@@ -99,21 +99,22 @@ loop.run_until_complete(main())
 
 Each `Package` object has the following info:
 
-* `destination_country`: the country the package was shipped to
-* `friendly_name`: the human-friendly name of the package
-* `info`: a text description of the latest status
-* `location`: the current location (if known)
-* `timestamp`: the timestamp of the latest event
-* `origin_country`: the country the package was shipped from
-* `package_type`: the type of package (if known)
-* `status`: the overall package status ("In Transit", "Delivered", etc.)
-* `tracking_info_language`: the language of the tracking info
-* `tracking_number`: the all-important tracking number
+- `destination_country`: the country the package was shipped to
+- `friendly_name`: the human-friendly name of the package
+- `info`: a text description of the latest status
+- `location`: the current location (if known)
+- `timestamp`: the timestamp of the latest event
+- `origin_country`: the country the package was shipped from
+- `package_type`: the type of package (if known)
+- `status`: the overall package status ("In Transit", "Delivered", etc.)
+- `tracking_info_language`: the language of the tracking info
+- `tracking_number`: the all-important tracking number
+- `carrier`: the logistics company transporting the package
 
 # Contributing
 
 1. [Check for open features/bugs](https://github.com/bachya/py17track/issues)
-  or [initiate a discussion on one](https://github.com/bachya/py17track/issues/new).
+   or [initiate a discussion on one](https://github.com/bachya/py17track/issues/new).
 2. [Fork the repository](https://github.com/bachya/py17track/fork).
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
 4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`
@@ -125,3 +126,10 @@ Each `Package` object has the following info:
 10. Add yourself to `AUTHORS.md`.
 11. Submit a pull request!
 
+# Updating Carrier and Country JSON
+
+If the carrier or country lists need to be updated to support new ones, simply download the updated JSON from 17track.
+
+https://res.17track.net/asset/carrier/info/carrier.all.json
+
+https://res.17track.net/asset/carrier/info/country.all.json

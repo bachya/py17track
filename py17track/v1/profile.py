@@ -54,6 +54,7 @@ class ProfileV1(Profile):
             event: dict = track.get("z0", {})
 
             kwargs: dict = {
+                "carrier": track.get("w1"),
                 "id": package.get("number"),
                 "destination_country": track.get("c", 0),
                 "info_text": event.get("z"),
@@ -99,14 +100,26 @@ class ProfileV1(Profile):
         _LOGGER.debug("Track List response: %s", track_list)
         return track_list
 
-    async def add_package_with_carrier(
-        self, tracking_number: str, carrier: str, friendly_name: Optional[str] = None
+    async def add_package(
+        self, tracking_number: str, friendly_name: Optional[str] = None
     ):
         """Add a package by tracking number to the tracking list."""
+        return await self.add_package_with_carrier(
+            tracking_number, friendly_name=friendly_name
+        )
+
+    async def add_package_with_carrier(
+        self,
+        tracking_number: str,
+        carrier: Optional[str] = None,
+        friendly_name: Optional[str] = None,
+    ):
+        """Add a package by tracking number and carrier to the tracking list."""
         json: dict = {"number": tracking_number}
-        carrier_key: int = get_carrier_key(carrier)
-        json["carrier"] = carrier_key
-        # TODO map carrier name to code
+        if carrier is not None:
+            carrier_key: int = get_carrier_key(carrier)
+            json["carrier"] = carrier_key
+
         if friendly_name is not None:
             json["tag"] = friendly_name
         add_resp: dict = await self._request(

@@ -40,6 +40,8 @@ async def test_packages(aresponses):
         print(packages)
         assert len(packages) == 5
         assert packages[0].location == "Paris"
+        assert packages[0].carrier == "Fedex"
+        assert packages[0].origin_country == "United States"
         assert packages[1].location == "Spain"
         assert packages[2].location == "Milano Italy"
         assert packages[3].location == ""
@@ -219,9 +221,7 @@ async def test_add_existing_package(aresponses):
         with pytest.raises(InvalidTrackingNumberError):
             client = Client(version=Version.V1, session=session)
             client.profile.login(TEST_TOKEN)
-            await client.profile.add_package_with_carrier(
-                "1234567890987654321", "FedEx"
-            )
+            await client.profile.add_package("1234567890987654321")
 
 
 @pytest.mark.asyncio
@@ -238,9 +238,7 @@ async def test_api_error(aresponses):
         with pytest.raises(RequestError):
             client = Client(version=Version.V1, session=session)
             client.profile.login(TEST_TOKEN)
-            await client.profile.add_package_with_carrier(
-                "1234567890987654321", "FedEx"
-            )
+            await client.profile.add_package("1234567890987654321")
 
 
 @pytest.mark.asyncio
