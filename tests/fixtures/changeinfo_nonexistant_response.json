@@ -1,0 +1,15 @@
+{
+  "code": 0,
+  "data": {
+    "accepted": [],
+    "rejected": [
+      {
+        "number": "1234567890",
+        "error": {
+          "code": -18019902,
+          "message": "The tracking number '1234567890' does not register, please register first."
+        }
+      }
+    ]
+  }
+}

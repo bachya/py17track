@@ -1,0 +1,11 @@
+{
+  "code": 401,
+  "data": {
+    "errors": [
+      {
+        "code": -18010002,
+        "message": "Access token is invalid."
+      }
+    ]
+  }
+}

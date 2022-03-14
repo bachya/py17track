@@ -2,8 +2,9 @@
 import logging
 from typing import Callable, Coroutine, List, Optional, Union
 
-from ..profile import Profile
+from ..errors import InvalidTrackingNumberError
 from ..package import PACKAGE_STATUS_MAP, Package
+from ..profile import Profile
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ class ProfileV1(Profile):
         self._api_token: Optional[str] = None
 
     def login(self, api_token: str) -> None:
+        """Set api_token."""
         self._api_token = api_token
 
     async def packages(
@@ -28,11 +30,13 @@ class ProfileV1(Profile):
         tz: str = "UTC",
     ) -> list:
         """Get the list of packages associated with the account."""
-        track_list: dict = await self._get_track_list(package_state=package_state, show_archived=show_archived)
+        track_list: dict = await self._get_track_list(
+            package_state=package_state, show_archived=show_archived
+        )
         tracking_request: list = []
 
-        for track in track_list.get("data", {}).get("accepted", []):
-            tracking_request.append({"number": track["number"], "carrier": track["w1"]})
+        for t in track_list.get("data", {}).get("accepted", []):
+            tracking_request.append({"number": t["number"], "carrier": t["w1"]})
 
         packages_resp: dict = await self._request(
             "post",
@@ -45,8 +49,8 @@ class ProfileV1(Profile):
 
         packages: List[Package] = []
         for package in packages_resp.get("data", {}).get("accepted", []):
-            track: dict = package.get("track")
-            event: dict = track.get("z0")
+            track: dict = package.get("track", {})
+            event: dict = track.get("z0", {})
 
             kwargs: dict = {
                 "id": package.get("number"),
@@ -57,7 +61,7 @@ class ProfileV1(Profile):
                 "tz": tz,
                 "origin_country": track.get("b", 0),
                 "status": track.get("e", 0),
-                "tracking_info_language": track.get("ln1", "Unknown")
+                "tracking_info_language": track.get("ln1", "Unknown"),
             }
             packages.append(Package(package.get("number"), **kwargs))
         return packages
@@ -66,7 +70,8 @@ class ProfileV1(Profile):
         """Get a quick summary of how many packages are in an account."""
         summary_resp: dict = await self._get_track_list(show_archived=show_archived)
 
-        results: dict = {}
+        results: dict = {s: 0 for s in list(PACKAGE_STATUS_MAP.values())}
+        results["Unknown"] = 0
         for kind in summary_resp.get("data", {}).get("accepted", []):
             key = PACKAGE_STATUS_MAP.get(kind["e"], "Unknown")
             value = 1
@@ -93,15 +98,38 @@ class ProfileV1(Profile):
         _LOGGER.debug("Track List response: %s", track_list)
         return track_list
 
-    async def add_package(
-        self, tracking_number: str, friendly_name: Optional[str] = None
+    async def add_package_with_carrier(
+        self, tracking_number: str, carrier: str, friendly_name: Optional[str] = None
     ):
         """Add a package by tracking number to the tracking list."""
-        pass
+        json: dict = {"number": tracking_number}
+        # TODO map carrier name to code
+        if friendly_name is not None:
+            json["tag"] = friendly_name
+        add_resp: dict = await self._request(
+            "post",
+            V1_API_URL + "/register",
+            json=[json],
+        )
 
-    async def set_friendly_name(self, internal_id: str, friendly_name: str):
-        """Set a friendly name to an already added tracking number.
+        _LOGGER.debug("Add package response: %s", add_resp)
 
-        internal_id is not the tracking number, it's the ID of an existing package.
-        """
-        pass
+        rejected = add_resp.get("data", {}).get("rejected", [])
+        if len(rejected) > 0:
+            reason = rejected[0].get("error", {}).get("message", "Unknown")
+            raise InvalidTrackingNumberError(f"{tracking_number} is invalid: {reason}")
+
+    async def set_friendly_name(self, tracking_number: str, friendly_name: str):
+        """Set a friendly name to an already added tracking number."""
+        add_resp: dict = await self._request(
+            "post",
+            V1_API_URL + "/changeinfo",
+            json={"number": tracking_number, "items": {"tag": friendly_name}},
+        )
+
+        _LOGGER.debug("Set friendly name response: %s", add_resp)
+
+        rejected = add_resp.get("data", {}).get("rejected", [])
+        if len(rejected) > 0:
+            reason = rejected[0].get("error", {}).get("message", "Unknown")
+            raise InvalidTrackingNumberError(f"{tracking_number} is invalid: {reason}")

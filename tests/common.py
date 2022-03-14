@@ -3,6 +3,7 @@ import os
 
 TEST_EMAIL = "user@email.com"
 TEST_PASSWORD = "password"
+TEST_TOKEN = "abcd12345"
 
 
 def load_fixture(filename):
