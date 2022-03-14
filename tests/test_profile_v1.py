@@ -4,7 +4,11 @@ import pytest
 from pytz import UTC, timezone
 
 from py17track import Client, Version
-from py17track.errors import InvalidTrackingNumberError, RequestError
+from py17track.errors import (
+    InvalidTrackingNumberError,
+    RequestError,
+    SeventeenTrackError,
+)
 
 from .common import TEST_TOKEN, load_fixture
 
@@ -236,4 +240,16 @@ async def test_api_error(aresponses):
             client.profile.login(TEST_TOKEN)
             await client.profile.add_package_with_carrier(
                 "1234567890987654321", "FedEx"
+            )
+
+
+@pytest.mark.asyncio
+async def test_unknown_carrier_name(aresponses):
+    """Test unknown carrier."""
+    async with aiohttp.ClientSession() as session:
+        with pytest.raises(SeventeenTrackError):
+            client = Client(version=Version.V1, session=session)
+            client.profile.login(TEST_TOKEN)
+            await client.profile.add_package_with_carrier(
+                "1234567890987654321", "Foobar"
             )

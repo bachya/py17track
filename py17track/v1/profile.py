@@ -2,6 +2,7 @@
 import logging
 from typing import Callable, Coroutine, List, Optional, Union
 
+from ..data import get_carrier_key
 from ..errors import InvalidTrackingNumberError
 from ..package import PACKAGE_STATUS_MAP, Package
 from ..profile import Profile
@@ -103,6 +104,8 @@ class ProfileV1(Profile):
     ):
         """Add a package by tracking number to the tracking list."""
         json: dict = {"number": tracking_number}
+        carrier_key: int = get_carrier_key(carrier)
+        json["carrier"] = carrier_key
         # TODO map carrier name to code
         if friendly_name is not None:
             json["tag"] = friendly_name
