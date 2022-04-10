@@ -3,8 +3,8 @@ import aiohttp
 import pytest
 from pytz import UTC, timezone
 
-from py17track import Client, Version
-from py17track.errors import (
+from seventeentrack import Client, Version
+from seventeentrack.errors import (
     InvalidTrackingNumberError,
     RequestError,
     SeventeenTrackError,

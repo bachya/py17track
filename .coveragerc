@@ -1,5 +1,5 @@
 [run]
-source = py17track
+source = seventeentrack
 
 omit =
-    py17track/track.py
+    seventeentrack/track.py

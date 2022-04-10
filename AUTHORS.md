@@ -1,4 +1,4 @@
-# Contributions to `py17track`
+# Contributions to `seventeentrack`
 
 ## Owners
 

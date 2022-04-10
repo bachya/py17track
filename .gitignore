@@ -3,7 +3,7 @@
 .tox/
 .venv
 __pycache__/
-py17track.egg-info
+seventeentrack.egg-info
 coverage.xml
 poetry.lock
 tags

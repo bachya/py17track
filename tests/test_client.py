@@ -2,8 +2,8 @@
 import aiohttp
 import pytest
 
-from py17track import Client
-from py17track.errors import RequestError
+from seventeentrack import Client
+from seventeentrack.errors import RequestError
 
 
 @pytest.mark.asyncio

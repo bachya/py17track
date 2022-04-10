@@ -1,15 +1,16 @@
-# 📦 py17track: A Simple Python API for 17track.net
+# 📦 seventeentrack: A Simple Python API for 17track.net
 
-[![CI](https://github.com/bachya/py17track/workflows/CI/badge.svg)](https://github.com/bachya/py17track/actions)
-[![PyPi](https://img.shields.io/pypi/v/py17track.svg)](https://pypi.python.org/pypi/py17track)
-[![Version](https://img.shields.io/pypi/pyversions/py17track.svg)](https://pypi.python.org/pypi/py17track)
-[![License](https://img.shields.io/pypi/l/py17track.svg)](https://github.com/bachya/py17track/blob/master/LICENSE)
-[![Code Coverage](https://codecov.io/gh/bachya/py17track/branch/master/graph/badge.svg)](https://codecov.io/gh/bachya/py17track)
-[![Maintainability](https://api.codeclimate.com/v1/badges/af60d65b69d416136fc9/maintainability)](https://codeclimate.com/github/bachya/py17track/maintainability)
-[![Say Thanks](https://img.shields.io/badge/SayThanks-!-1EAEDB.svg)](https://saythanks.io/to/bachya)
+[![CI](https://github.com/mcswindler/seventeentrack/workflows/CI/badge.svg)](https://github.com/mcswindler/seventeentrack/actions)
+[![PyPi](https://img.shields.io/pypi/v/seventeentrack.svg)](https://pypi.python.org/pypi/seventeentrack)
+[![Version](https://img.shields.io/pypi/pyversions/seventeentrack.svg)](https://pypi.python.org/pypi/seventeentrack)
+[![License](https://img.shields.io/pypi/l/seventeentrack.svg)](https://github.com/mcswindler/seventeentrack/blob/master/LICENSE)
+[![Code Coverage](https://codecov.io/gh/mcswindler/seventeentrack/branch/master/graph/badge.svg)](https://codecov.io/gh/mcswindler/seventeentrack)
+[![Maintainability](https://api.codeclimate.com/v1/badges/af60d65b69d416136fc9/maintainability)](https://codeclimate.com/github/mcswindler/seventeentrack/maintainability)
 
-`py17track` is a simple Python library to track packages in
+`seventeentrack` is a simple Python library to track packages in
 [17track.net](http://www.17track.net/) accounts.
+
+This project was built off of [seventeentrack](https://github.com/mcswindler/seventeentrack).
 
 ## V1 API
 
@@ -17,15 +18,9 @@ You can register an account first here: https://features.17track.net/en/api
 Each account will have 100 free tracking quota for testing.
 Once logged in, you can find the API token/Access key under Settings -> Security -> Access Key
 
-## Legacy API
-
-Since this is uses an unofficial API, there's no guarantee that 17track.net
-will provide every field for every package, all the time. Additionally, this
-API may stop working at any moment.
-
 # Python Versions
 
-`py17track` is currently supported on:
+`seventeentrack` is currently supported on:
 
 - Python 3.7
 - Python 3.8
@@ -35,7 +30,7 @@ API may stop working at any moment.
 # Installation
 
 ```python
-pip install py17track
+pip install seventeentrack
 ```
 
 # Usage
@@ -45,7 +40,7 @@ import asyncio
 
 from aiohttp import ClientSession
 
-from py17track import Client, Version
+from seventeentrack import Client, Version
 
 
 async def main() -> None:
@@ -61,7 +56,7 @@ async def main() -> None:
 
     # Get all packages associated with a user's account:
     packages = await client.profile.packages()
-    # >>> [py17track.package.Package(..), ...]
+    # >>> [seventeentrack.package.Package(..), ...]
 
     # Add new packages by tracking number
     await client.profile.add_package('<TRACKING NUMBER>', '<FRIENDLY NAME>')
@@ -82,7 +77,7 @@ import asyncio
 
 from aiohttp import ClientSession
 
-from py17track import Client
+from seventeentrack import Client
 
 
 async def main() -> None:
@@ -113,9 +108,9 @@ Each `Package` object has the following info:
 
 # Contributing
 
-1. [Check for open features/bugs](https://github.com/bachya/py17track/issues)
-   or [initiate a discussion on one](https://github.com/bachya/py17track/issues/new).
-2. [Fork the repository](https://github.com/bachya/py17track/fork).
+1. [Check for open features/bugs](https://github.com/mcswindler/seventeentrack/issues)
+   or [initiate a discussion on one](https://github.com/mcswindler/seventeentrack/issues/new).
+2. [Fork the repository](https://github.com/mcswindler/seventeentrack/fork).
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
 4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`
 5. Install the dev environment: `script/setup`

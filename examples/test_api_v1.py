@@ -4,8 +4,8 @@ import logging
 
 from aiohttp import ClientSession
 
-from py17track import Client, Version
-from py17track.errors import SeventeenTrackError
+from seventeentrack import Client, Version
+from seventeentrack.errors import SeventeenTrackError
 
 _LOGGER = logging.getLogger()
 
