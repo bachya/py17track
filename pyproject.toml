@@ -29,11 +29,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -41,7 +39,7 @@ classifiers = [
 [tool.poetry.dependencies]
 aiohttp = ">=3.8.0"
 attrs = ">=19.3"
-python = "^3.6.1"
+python = "^3.9.0"
 pytz = ">=2021.1"
 
 [tool.poetry.dev-dependencies]
